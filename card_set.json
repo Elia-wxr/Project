@@ -1,704 +1,1250 @@
-{
-  "The Fool": {
+[
+  {
     "arcana": "Major",
     "suit": null,
     "number": 0,
     "rank": null,
     "element": "Air",
-    "upright": ["beginnings", "freedom"],
-    "reversed": ["recklessness", "hesitation"]
+    "upright": [
+      "beginnings",
+      "freedom"
+    ],
+    "reversed": [
+      "recklessness",
+      "hesitation"
+    ],
+    "name": "The Fool"
   },
-  "The Magician": {
+  {
     "arcana": "Major",
     "suit": null,
     "number": 1,
     "rank": null,
     "element": "Air",
-    "upright": ["skill", "initiative"],
-    "reversed": ["manipulation", "untapped talent"]
+    "upright": [
+      "skill",
+      "initiative"
+    ],
+    "reversed": [
+      "manipulation",
+      "untapped talent"
+    ],
+    "name": "The Magician"
   },
-  "The High Priestess": {
+  {
     "arcana": "Major",
     "suit": null,
     "number": 2,
     "rank": null,
     "element": "Water",
-    "upright": ["intuition", "mystery"],
-    "reversed": ["secrets", "disconnection"]
+    "upright": [
+      "intuition",
+      "mystery"
+    ],
+    "reversed": [
+      "secrets",
+      "disconnection"
+    ],
+    "name": "The High Priestess"
   },
-  "The Empress": {
+  {
     "arcana": "Major",
     "suit": null,
     "number": 3,
     "rank": null,
     "element": "Earth",
-    "upright": ["abundance", "nurturing"],
-    "reversed": ["dependence", "creative block"]
+    "upright": [
+      "abundance",
+      "nurturing"
+    ],
+    "reversed": [
+      "dependence",
+      "creative block"
+    ],
+    "name": "The Empress"
   },
-  "The Emperor": {
+  {
     "arcana": "Major",
     "suit": null,
     "number": 4,
     "rank": null,
     "element": "Fire",
-    "upright": ["structure", "authority"],
-    "reversed": ["rigidity", "control"]
+    "upright": [
+      "structure",
+      "authority"
+    ],
+    "reversed": [
+      "rigidity",
+      "control"
+    ],
+    "name": "The Emperor"
   },
-  "The Hierophant": {
+  {
     "arcana": "Major",
     "suit": null,
     "number": 5,
     "rank": null,
     "element": "Earth",
-    "upright": ["tradition", "learning"],
-    "reversed": ["rebellion", "unorthodoxy"]
+    "upright": [
+      "tradition",
+      "learning"
+    ],
+    "reversed": [
+      "rebellion",
+      "unorthodoxy"
+    ],
+    "name": "The Hierophant"
   },
-  "The Lovers": {
+  {
     "arcana": "Major",
     "suit": null,
     "number": 6,
     "rank": null,
     "element": "Air",
-    "upright": ["partnership", "alignment"],
-    "reversed": ["disharmony", "misalignment"]
+    "upright": [
+      "partnership",
+      "alignment"
+    ],
+    "reversed": [
+      "disharmony",
+      "misalignment"
+    ],
+    "name": "The Lovers"
   },
-  "The Chariot": {
+  {
     "arcana": "Major",
     "suit": null,
     "number": 7,
     "rank": null,
     "element": "Water",
-    "upright": ["willpower", "progress"],
-    "reversed": ["lack of direction", "force"]
+    "upright": [
+      "willpower",
+      "progress"
+    ],
+    "reversed": [
+      "lack of direction",
+      "force"
+    ],
+    "name": "The Chariot"
   },
-  "Strength": {
+  {
     "arcana": "Major",
     "suit": null,
     "number": 8,
     "rank": null,
     "element": "Fire",
-    "upright": ["courage", "patience"],
-    "reversed": ["self-doubt", "overwhelm"]
+    "upright": [
+      "courage",
+      "patience"
+    ],
+    "reversed": [
+      "self-doubt",
+      "overwhelm"
+    ],
+    "name": "Strength"
   },
-  "The Hermit": {
+  {
     "arcana": "Major",
     "suit": null,
     "number": 9,
     "rank": null,
     "element": "Earth",
-    "upright": ["reflection", "wisdom"],
-    "reversed": ["isolation", "withdrawal"]
+    "upright": [
+      "reflection",
+      "wisdom"
+    ],
+    "reversed": [
+      "isolation",
+      "withdrawal"
+    ],
+    "name": "The Hermit"
   },
-  "Wheel of Fortune": {
+  {
     "arcana": "Major",
     "suit": null,
     "number": 10,
     "rank": null,
     "element": "Fire",
-    "upright": ["change", "cycles"],
-    "reversed": ["setback", "resistance to change"]
+    "upright": [
+      "change",
+      "cycles"
+    ],
+    "reversed": [
+      "setback",
+      "resistance to change"
+    ],
+    "name": "Wheel of Fortune"
   },
-  "Justice": {
+  {
     "arcana": "Major",
     "suit": null,
     "number": 11,
     "rank": null,
     "element": "Air",
-    "upright": ["fairness", "accountability"],
-    "reversed": ["bias", "avoidance"]
+    "upright": [
+      "fairness",
+      "accountability"
+    ],
+    "reversed": [
+      "bias",
+      "avoidance"
+    ],
+    "name": "Justice"
   },
-  "The Hanged Man": {
+  {
     "arcana": "Major",
     "suit": null,
     "number": 12,
     "rank": null,
     "element": "Water",
-    "upright": ["surrender", "new perspective"],
-    "reversed": ["stalling", "resistance"]
+    "upright": [
+      "surrender",
+      "new perspective"
+    ],
+    "reversed": [
+      "stalling",
+      "resistance"
+    ],
+    "name": "The Hanged Man"
   },
-  "Death": {
+  {
     "arcana": "Major",
     "suit": null,
     "number": 13,
     "rank": null,
     "element": "Water",
-    "upright": ["ending", "transformation"],
-    "reversed": ["stagnation", "fear of change"]
+    "upright": [
+      "ending",
+      "transformation"
+    ],
+    "reversed": [
+      "stagnation",
+      "fear of change"
+    ],
+    "name": "Death"
   },
-  "Temperance": {
+  {
     "arcana": "Major",
     "suit": null,
     "number": 14,
     "rank": null,
     "element": "Fire",
-    "upright": ["balance", "moderation"],
-    "reversed": ["excess", "imbalance"]
+    "upright": [
+      "balance",
+      "moderation"
+    ],
+    "reversed": [
+      "excess",
+      "imbalance"
+    ],
+    "name": "Temperance"
   },
-  "The Devil": {
+  {
     "arcana": "Major",
     "suit": null,
     "number": 15,
     "rank": null,
     "element": "Earth",
-    "upright": ["attachment", "temptation"],
-    "reversed": ["release", "reclaiming control"]
+    "upright": [
+      "attachment",
+      "temptation"
+    ],
+    "reversed": [
+      "release",
+      "reclaiming control"
+    ],
+    "name": "The Devil"
   },
-  "The Tower": {
+  {
     "arcana": "Major",
     "suit": null,
     "number": 16,
     "rank": null,
     "element": "Fire",
-    "upright": ["upheaval", "revelation"],
-    "reversed": ["delayed change", "fear of disruption"]
+    "upright": [
+      "upheaval",
+      "revelation"
+    ],
+    "reversed": [
+      "delayed change",
+      "fear of disruption"
+    ],
+    "name": "The Tower"
   },
-  "The Star": {
+  {
     "arcana": "Major",
     "suit": null,
     "number": 17,
     "rank": null,
     "element": "Air",
-    "upright": ["hope", "renewal"],
-    "reversed": ["discouragement", "disconnection"]
+    "upright": [
+      "hope",
+      "renewal"
+    ],
+    "reversed": [
+      "discouragement",
+      "disconnection"
+    ],
+    "name": "The Star"
   },
-  "The Moon": {
+  {
     "arcana": "Major",
     "suit": null,
     "number": 18,
     "rank": null,
     "element": "Water",
-    "upright": ["uncertainty", "intuition"],
-    "reversed": ["clarity", "facing fears"]
+    "upright": [
+      "uncertainty",
+      "intuition"
+    ],
+    "reversed": [
+      "clarity",
+      "facing fears"
+    ],
+    "name": "The Moon"
   },
-  "The Sun": {
+  {
     "arcana": "Major",
     "suit": null,
     "number": 19,
     "rank": null,
     "element": "Fire",
-    "upright": ["joy", "vitality"],
-    "reversed": ["temporary sadness", "overconfidence"]
+    "upright": [
+      "joy",
+      "vitality"
+    ],
+    "reversed": [
+      "temporary sadness",
+      "overconfidence"
+    ],
+    "name": "The Sun"
   },
-  "Judgement": {
+  {
     "arcana": "Major",
     "suit": null,
     "number": 20,
     "rank": null,
     "element": "Fire",
-    "upright": ["reckoning", "renewal"],
-    "reversed": ["self-doubt", "avoidance"]
+    "upright": [
+      "reckoning",
+      "renewal"
+    ],
+    "reversed": [
+      "self-doubt",
+      "avoidance"
+    ],
+    "name": "Judgement"
   },
-  "The World": {
+  {
     "arcana": "Major",
     "suit": null,
     "number": 21,
     "rank": null,
     "element": "Earth",
-    "upright": ["completion", "fulfillment"],
-    "reversed": ["unfinished business", "delays"]
+    "upright": [
+      "completion",
+      "fulfillment"
+    ],
+    "reversed": [
+      "unfinished business",
+      "delays"
+    ],
+    "name": "The World"
   },
-  "Ace of Wands": {
+  {
     "arcana": "Minor",
     "suit": "Wands",
     "number": 1,
     "rank": "Ace",
     "element": "Fire",
-    "upright": ["inspiration", "potential"],
-    "reversed": ["delays", "lack of energy"]
+    "upright": [
+      "inspiration",
+      "potential"
+    ],
+    "reversed": [
+      "delays",
+      "lack of energy"
+    ],
+    "name": "Ace of Wands"
   },
-  "Two of Wands": {
+  {
     "arcana": "Minor",
     "suit": "Wands",
     "number": 2,
     "rank": "Two",
     "element": "Fire",
-    "upright": ["planning", "choices"],
-    "reversed": ["fear of the unknown", "poor planning"]
+    "upright": [
+      "planning",
+      "choices"
+    ],
+    "reversed": [
+      "fear of the unknown",
+      "poor planning"
+    ],
+    "name": "Two of Wands"
   },
-  "Three of Wands": {
+  {
     "arcana": "Minor",
     "suit": "Wands",
     "number": 3,
     "rank": "Three",
     "element": "Fire",
-    "upright": ["expansion", "foresight"],
-    "reversed": ["obstacles", "delays"]
+    "upright": [
+      "expansion",
+      "foresight"
+    ],
+    "reversed": [
+      "obstacles",
+      "delays"
+    ],
+    "name": "Three of Wands"
   },
-  "Four of Wands": {
+  {
     "arcana": "Minor",
     "suit": "Wands",
     "number": 4,
     "rank": "Four",
     "element": "Fire",
-    "upright": ["celebration", "stability"],
-    "reversed": ["instability", "unfinished celebration"]
+    "upright": [
+      "celebration",
+      "stability"
+    ],
+    "reversed": [
+      "instability",
+      "unfinished celebration"
+    ],
+    "name": "Four of Wands"
   },
-  "Five of Wands": {
+  {
     "arcana": "Minor",
     "suit": "Wands",
     "number": 5,
     "rank": "Five",
     "element": "Fire",
-    "upright": ["competition", "conflict"],
-    "reversed": ["resolution", "avoiding conflict"]
+    "upright": [
+      "competition",
+      "conflict"
+    ],
+    "reversed": [
+      "resolution",
+      "avoiding conflict"
+    ],
+    "name": "Five of Wands"
   },
-  "Six of Wands": {
+  {
     "arcana": "Minor",
     "suit": "Wands",
     "number": 6,
     "rank": "Six",
     "element": "Fire",
-    "upright": ["recognition", "success"],
-    "reversed": ["self-doubt", "lack of recognition"]
+    "upright": [
+      "recognition",
+      "success"
+    ],
+    "reversed": [
+      "self-doubt",
+      "lack of recognition"
+    ],
+    "name": "Six of Wands"
   },
-  "Seven of Wands": {
+  {
     "arcana": "Minor",
     "suit": "Wands",
     "number": 7,
     "rank": "Seven",
     "element": "Fire",
-    "upright": ["courage", "defense"],
-    "reversed": ["overwhelm", "giving up"]
+    "upright": [
+      "courage",
+      "defense"
+    ],
+    "reversed": [
+      "overwhelm",
+      "giving up"
+    ],
+    "name": "Seven of Wands"
   },
-  "Eight of Wands": {
+  {
     "arcana": "Minor",
     "suit": "Wands",
     "number": 8,
     "rank": "Eight",
     "element": "Fire",
-    "upright": ["momentum", "swift action"],
-    "reversed": ["delays", "scattered energy"]
+    "upright": [
+      "momentum",
+      "swift action"
+    ],
+    "reversed": [
+      "delays",
+      "scattered energy"
+    ],
+    "name": "Eight of Wands"
   },
-  "Nine of Wands": {
+  {
     "arcana": "Minor",
     "suit": "Wands",
     "number": 9,
     "rank": "Nine",
     "element": "Fire",
-    "upright": ["resilience", "persistence"],
-    "reversed": ["exhaustion", "defensiveness"]
+    "upright": [
+      "resilience",
+      "persistence"
+    ],
+    "reversed": [
+      "exhaustion",
+      "defensiveness"
+    ],
+    "name": "Nine of Wands"
   },
-  "Ten of Wands": {
+  {
     "arcana": "Minor",
     "suit": "Wands",
     "number": 10,
     "rank": "Ten",
     "element": "Fire",
-    "upright": ["responsibility", "burden"],
-    "reversed": ["overcommitment", "release"]
+    "upright": [
+      "responsibility",
+      "burden"
+    ],
+    "reversed": [
+      "overcommitment",
+      "release"
+    ],
+    "name": "Ten of Wands"
   },
-  "Page of Wands": {
+  {
     "arcana": "Minor",
     "suit": "Wands",
     "number": null,
     "rank": "Page",
     "element": "Fire",
-    "upright": ["curiosity", "enthusiasm"],
-    "reversed": ["immaturity", "false starts"]
+    "upright": [
+      "curiosity",
+      "enthusiasm"
+    ],
+    "reversed": [
+      "immaturity",
+      "false starts"
+    ],
+    "name": "Page of Wands"
   },
-  "Knight of Wands": {
+  {
     "arcana": "Minor",
     "suit": "Wands",
     "number": null,
     "rank": "Knight",
     "element": "Fire",
-    "upright": ["boldness", "adventure"],
-    "reversed": ["impulsiveness", "frustration"]
+    "upright": [
+      "boldness",
+      "adventure"
+    ],
+    "reversed": [
+      "impulsiveness",
+      "frustration"
+    ],
+    "name": "Knight of Wands"
   },
-  "Queen of Wands": {
+  {
     "arcana": "Minor",
     "suit": "Wands",
     "number": null,
     "rank": "Queen",
     "element": "Fire",
-    "upright": ["confidence", "warmth"],
-    "reversed": ["insecurity", "jealousy"]
+    "upright": [
+      "confidence",
+      "warmth"
+    ],
+    "reversed": [
+      "insecurity",
+      "jealousy"
+    ],
+    "name": "Queen of Wands"
   },
-  "King of Wands": {
+  {
     "arcana": "Minor",
     "suit": "Wands",
     "number": null,
     "rank": "King",
     "element": "Fire",
-    "upright": ["leadership", "vision"],
-    "reversed": ["domination", "impulsiveness"]
+    "upright": [
+      "leadership",
+      "vision"
+    ],
+    "reversed": [
+      "domination",
+      "impulsiveness"
+    ],
+    "name": "King of Wands"
   },
-  "Ace of Cups": {
+  {
     "arcana": "Minor",
     "suit": "Cups",
     "number": 1,
     "rank": "Ace",
     "element": "Water",
-    "upright": ["new feelings", "compassion"],
-    "reversed": ["emotional blockage", "emptiness"]
+    "upright": [
+      "new feelings",
+      "compassion"
+    ],
+    "reversed": [
+      "emotional blockage",
+      "emptiness"
+    ],
+    "name": "Ace of Cups"
   },
-  "Two of Cups": {
+  {
     "arcana": "Minor",
     "suit": "Cups",
     "number": 2,
     "rank": "Two",
     "element": "Water",
-    "upright": ["connection", "partnership"],
-    "reversed": ["imbalance", "separation"]
+    "upright": [
+      "connection",
+      "partnership"
+    ],
+    "reversed": [
+      "imbalance",
+      "separation"
+    ],
+    "name": "Two of Cups"
   },
-  "Three of Cups": {
+  {
     "arcana": "Minor",
     "suit": "Cups",
     "number": 3,
     "rank": "Three",
     "element": "Water",
-    "upright": ["friendship", "celebration"],
-    "reversed": ["overindulgence", "isolation"]
+    "upright": [
+      "friendship",
+      "celebration"
+    ],
+    "reversed": [
+      "overindulgence",
+      "isolation"
+    ],
+    "name": "Three of Cups"
   },
-  "Four of Cups": {
+  {
     "arcana": "Minor",
     "suit": "Cups",
     "number": 4,
     "rank": "Four",
     "element": "Water",
-    "upright": ["contemplation", "apathy"],
-    "reversed": ["renewed interest", "awareness"]
+    "upright": [
+      "contemplation",
+      "apathy"
+    ],
+    "reversed": [
+      "renewed interest",
+      "awareness"
+    ],
+    "name": "Four of Cups"
   },
-  "Five of Cups": {
+  {
     "arcana": "Minor",
     "suit": "Cups",
     "number": 5,
     "rank": "Five",
     "element": "Water",
-    "upright": ["grief", "disappointment"],
-    "reversed": ["acceptance", "recovery"]
+    "upright": [
+      "grief",
+      "disappointment"
+    ],
+    "reversed": [
+      "acceptance",
+      "recovery"
+    ],
+    "name": "Five of Cups"
   },
-  "Six of Cups": {
+  {
     "arcana": "Minor",
     "suit": "Cups",
     "number": 6,
     "rank": "Six",
     "element": "Water",
-    "upright": ["nostalgia", "kindness"],
-    "reversed": ["living in the past", "immaturity"]
+    "upright": [
+      "nostalgia",
+      "kindness"
+    ],
+    "reversed": [
+      "living in the past",
+      "immaturity"
+    ],
+    "name": "Six of Cups"
   },
-  "Seven of Cups": {
+  {
     "arcana": "Minor",
     "suit": "Cups",
     "number": 7,
     "rank": "Seven",
     "element": "Water",
-    "upright": ["options", "imagination"],
-    "reversed": ["clarity", "realistic choices"]
+    "upright": [
+      "options",
+      "imagination"
+    ],
+    "reversed": [
+      "clarity",
+      "realistic choices"
+    ],
+    "name": "Seven of Cups"
   },
-  "Eight of Cups": {
+  {
     "arcana": "Minor",
     "suit": "Cups",
     "number": 8,
     "rank": "Eight",
     "element": "Water",
-    "upright": ["departure", "seeking meaning"],
-    "reversed": ["fear of leaving", "aimlessness"]
+    "upright": [
+      "departure",
+      "seeking meaning"
+    ],
+    "reversed": [
+      "fear of leaving",
+      "aimlessness"
+    ],
+    "name": "Eight of Cups"
   },
-  "Nine of Cups": {
+  {
     "arcana": "Minor",
     "suit": "Cups",
     "number": 9,
     "rank": "Nine",
     "element": "Water",
-    "upright": ["contentment", "wishes"],
-    "reversed": ["dissatisfaction", "excess"]
+    "upright": [
+      "contentment",
+      "wishes"
+    ],
+    "reversed": [
+      "dissatisfaction",
+      "excess"
+    ],
+    "name": "Nine of Cups"
   },
-  "Ten of Cups": {
+  {
     "arcana": "Minor",
     "suit": "Cups",
     "number": 10,
     "rank": "Ten",
     "element": "Water",
-    "upright": ["harmony", "belonging"],
-    "reversed": ["family tension", "broken expectations"]
+    "upright": [
+      "harmony",
+      "belonging"
+    ],
+    "reversed": [
+      "family tension",
+      "broken expectations"
+    ],
+    "name": "Ten of Cups"
   },
-  "Page of Cups": {
+  {
     "arcana": "Minor",
     "suit": "Cups",
     "number": null,
     "rank": "Page",
     "element": "Water",
-    "upright": ["sensitivity", "creativity"],
-    "reversed": ["emotional immaturity", "insecurity"]
+    "upright": [
+      "sensitivity",
+      "creativity"
+    ],
+    "reversed": [
+      "emotional immaturity",
+      "insecurity"
+    ],
+    "name": "Page of Cups"
   },
-  "Knight of Cups": {
+  {
     "arcana": "Minor",
     "suit": "Cups",
     "number": null,
     "rank": "Knight",
     "element": "Water",
-    "upright": ["romance", "idealism"],
-    "reversed": ["moodiness", "unrealistic expectations"]
+    "upright": [
+      "romance",
+      "idealism"
+    ],
+    "reversed": [
+      "moodiness",
+      "unrealistic expectations"
+    ],
+    "name": "Knight of Cups"
   },
-  "Queen of Cups": {
+  {
     "arcana": "Minor",
     "suit": "Cups",
     "number": null,
     "rank": "Queen",
     "element": "Water",
-    "upright": ["empathy", "intuition"],
-    "reversed": ["overgiving", "emotional dependence"]
+    "upright": [
+      "empathy",
+      "intuition"
+    ],
+    "reversed": [
+      "overgiving",
+      "emotional dependence"
+    ],
+    "name": "Queen of Cups"
   },
-  "King of Cups": {
+  {
     "arcana": "Minor",
     "suit": "Cups",
     "number": null,
     "rank": "King",
     "element": "Water",
-    "upright": ["emotional balance", "diplomacy"],
-    "reversed": ["volatility", "emotional distance"]
+    "upright": [
+      "emotional balance",
+      "diplomacy"
+    ],
+    "reversed": [
+      "volatility",
+      "emotional distance"
+    ],
+    "name": "King of Cups"
   },
-  "Ace of Swords": {
+  {
     "arcana": "Minor",
     "suit": "Swords",
     "number": 1,
     "rank": "Ace",
     "element": "Air",
-    "upright": ["clarity", "truth"],
-    "reversed": ["confusion", "distorted thinking"]
+    "upright": [
+      "clarity",
+      "truth"
+    ],
+    "reversed": [
+      "confusion",
+      "distorted thinking"
+    ],
+    "name": "Ace of Swords"
   },
-  "Two of Swords": {
+  {
     "arcana": "Minor",
     "suit": "Swords",
     "number": 2,
     "rank": "Two",
     "element": "Air",
-    "upright": ["difficult choice", "balance"],
-    "reversed": ["indecision", "information overload"]
+    "upright": [
+      "difficult choice",
+      "balance"
+    ],
+    "reversed": [
+      "indecision",
+      "information overload"
+    ],
+    "name": "Two of Swords"
   },
-  "Three of Swords": {
+  {
     "arcana": "Minor",
     "suit": "Swords",
     "number": 3,
     "rank": "Three",
     "element": "Air",
-    "upright": ["heartbreak", "sorrow"],
-    "reversed": ["healing", "release"]
+    "upright": [
+      "heartbreak",
+      "sorrow"
+    ],
+    "reversed": [
+      "healing",
+      "release"
+    ],
+    "name": "Three of Swords"
   },
-  "Four of Swords": {
+  {
     "arcana": "Minor",
     "suit": "Swords",
     "number": 4,
     "rank": "Four",
     "element": "Air",
-    "upright": ["rest", "recovery"],
-    "reversed": ["burnout", "restlessness"]
+    "upright": [
+      "rest",
+      "recovery"
+    ],
+    "reversed": [
+      "burnout",
+      "restlessness"
+    ],
+    "name": "Four of Swords"
   },
-  "Five of Swords": {
+  {
     "arcana": "Minor",
     "suit": "Swords",
     "number": 5,
     "rank": "Five",
     "element": "Air",
-    "upright": ["conflict", "hollow victory"],
-    "reversed": ["reconciliation", "moving on"]
+    "upright": [
+      "conflict",
+      "hollow victory"
+    ],
+    "reversed": [
+      "reconciliation",
+      "moving on"
+    ],
+    "name": "Five of Swords"
   },
-  "Six of Swords": {
+  {
     "arcana": "Minor",
     "suit": "Swords",
     "number": 6,
     "rank": "Six",
     "element": "Air",
-    "upright": ["transition", "calmer waters"],
-    "reversed": ["lingering problems", "resistance"]
+    "upright": [
+      "transition",
+      "calmer waters"
+    ],
+    "reversed": [
+      "lingering problems",
+      "resistance"
+    ],
+    "name": "Six of Swords"
   },
-  "Seven of Swords": {
+  {
     "arcana": "Minor",
     "suit": "Swords",
     "number": 7,
     "rank": "Seven",
     "element": "Air",
-    "upright": ["strategy", "discretion"],
-    "reversed": ["exposure", "coming clean"]
+    "upright": [
+      "strategy",
+      "discretion"
+    ],
+    "reversed": [
+      "exposure",
+      "coming clean"
+    ],
+    "name": "Seven of Swords"
   },
-  "Eight of Swords": {
+  {
     "arcana": "Minor",
     "suit": "Swords",
     "number": 8,
     "rank": "Eight",
     "element": "Air",
-    "upright": ["restriction", "limiting beliefs"],
-    "reversed": ["freedom", "new perspective"]
+    "upright": [
+      "restriction",
+      "limiting beliefs"
+    ],
+    "reversed": [
+      "freedom",
+      "new perspective"
+    ],
+    "name": "Eight of Swords"
   },
-  "Nine of Swords": {
+  {
     "arcana": "Minor",
     "suit": "Swords",
     "number": 9,
     "rank": "Nine",
     "element": "Air",
-    "upright": ["worry", "fear"],
-    "reversed": ["recovery", "seeking support"]
+    "upright": [
+      "worry",
+      "fear"
+    ],
+    "reversed": [
+      "recovery",
+      "seeking support"
+    ],
+    "name": "Nine of Swords"
   },
-  "Ten of Swords": {
+  {
     "arcana": "Minor",
     "suit": "Swords",
     "number": 10,
     "rank": "Ten",
     "element": "Air",
-    "upright": ["ending", "painful transition"],
-    "reversed": ["survival", "gradual recovery"]
+    "upright": [
+      "ending",
+      "painful transition"
+    ],
+    "reversed": [
+      "survival",
+      "gradual recovery"
+    ],
+    "name": "Ten of Swords"
   },
-  "Page of Swords": {
+  {
     "arcana": "Minor",
     "suit": "Swords",
     "number": null,
     "rank": "Page",
     "element": "Air",
-    "upright": ["curiosity", "alertness"],
-    "reversed": ["gossip", "scattered thought"]
+    "upright": [
+      "curiosity",
+      "alertness"
+    ],
+    "reversed": [
+      "gossip",
+      "scattered thought"
+    ],
+    "name": "Page of Swords"
   },
-  "Knight of Swords": {
+  {
     "arcana": "Minor",
     "suit": "Swords",
     "number": null,
     "rank": "Knight",
     "element": "Air",
-    "upright": ["ambition", "swift action"],
-    "reversed": ["recklessness", "aggression"]
+    "upright": [
+      "ambition",
+      "swift action"
+    ],
+    "reversed": [
+      "recklessness",
+      "aggression"
+    ],
+    "name": "Knight of Swords"
   },
-  "Queen of Swords": {
+  {
     "arcana": "Minor",
     "suit": "Swords",
     "number": null,
     "rank": "Queen",
     "element": "Air",
-    "upright": ["discernment", "honesty"],
-    "reversed": ["coldness", "bitterness"]
+    "upright": [
+      "discernment",
+      "honesty"
+    ],
+    "reversed": [
+      "coldness",
+      "bitterness"
+    ],
+    "name": "Queen of Swords"
   },
-  "King of Swords": {
+  {
     "arcana": "Minor",
     "suit": "Swords",
     "number": null,
     "rank": "King",
     "element": "Air",
-    "upright": ["reason", "authority"],
-    "reversed": ["harsh judgment", "misuse of power"]
+    "upright": [
+      "reason",
+      "authority"
+    ],
+    "reversed": [
+      "harsh judgment",
+      "misuse of power"
+    ],
+    "name": "King of Swords"
   },
-  "Ace of Pentacles": {
+  {
     "arcana": "Minor",
     "suit": "Pentacles",
     "number": 1,
     "rank": "Ace",
     "element": "Earth",
-    "upright": ["opportunity", "prosperity"],
-    "reversed": ["missed chance", "instability"]
+    "upright": [
+      "opportunity",
+      "prosperity"
+    ],
+    "reversed": [
+      "missed chance",
+      "instability"
+    ],
+    "name": "Ace of Pentacles"
   },
-  "Two of Pentacles": {
+  {
     "arcana": "Minor",
     "suit": "Pentacles",
     "number": 2,
     "rank": "Two",
     "element": "Earth",
-    "upright": ["adaptability", "balance"],
-    "reversed": ["overwhelm", "disorganization"]
+    "upright": [
+      "adaptability",
+      "balance"
+    ],
+    "reversed": [
+      "overwhelm",
+      "disorganization"
+    ],
+    "name": "Two of Pentacles"
   },
-  "Three of Pentacles": {
+  {
     "arcana": "Minor",
     "suit": "Pentacles",
     "number": 3,
     "rank": "Three",
     "element": "Earth",
-    "upright": ["teamwork", "craftsmanship"],
-    "reversed": ["poor collaboration", "low quality"]
+    "upright": [
+      "teamwork",
+      "craftsmanship"
+    ],
+    "reversed": [
+      "poor collaboration",
+      "low quality"
+    ],
+    "name": "Three of Pentacles"
   },
-  "Four of Pentacles": {
+  {
     "arcana": "Minor",
     "suit": "Pentacles",
     "number": 4,
     "rank": "Four",
     "element": "Earth",
-    "upright": ["security", "saving"],
-    "reversed": ["possessiveness", "overspending"]
+    "upright": [
+      "security",
+      "saving"
+    ],
+    "reversed": [
+      "possessiveness",
+      "overspending"
+    ],
+    "name": "Four of Pentacles"
   },
-  "Five of Pentacles": {
+  {
     "arcana": "Minor",
     "suit": "Pentacles",
     "number": 5,
     "rank": "Five",
     "element": "Earth",
-    "upright": ["hardship", "insecurity"],
-    "reversed": ["recovery", "accepting help"]
+    "upright": [
+      "hardship",
+      "insecurity"
+    ],
+    "reversed": [
+      "recovery",
+      "accepting help"
+    ],
+    "name": "Five of Pentacles"
   },
-  "Six of Pentacles": {
+  {
     "arcana": "Minor",
     "suit": "Pentacles",
     "number": 6,
     "rank": "Six",
     "element": "Earth",
-    "upright": ["generosity", "support"],
-    "reversed": ["debt", "unequal exchange"]
+    "upright": [
+      "generosity",
+      "support"
+    ],
+    "reversed": [
+      "debt",
+      "unequal exchange"
+    ],
+    "name": "Six of Pentacles"
   },
-  "Seven of Pentacles": {
+  {
     "arcana": "Minor",
     "suit": "Pentacles",
     "number": 7,
     "rank": "Seven",
     "element": "Earth",
-    "upright": ["patience", "assessment"],
-    "reversed": ["impatience", "poor return"]
+    "upright": [
+      "patience",
+      "assessment"
+    ],
+    "reversed": [
+      "impatience",
+      "poor return"
+    ],
+    "name": "Seven of Pentacles"
   },
-  "Eight of Pentacles": {
+  {
     "arcana": "Minor",
     "suit": "Pentacles",
     "number": 8,
     "rank": "Eight",
     "element": "Earth",
-    "upright": ["practice", "skill"],
-    "reversed": ["perfectionism", "lack of focus"]
+    "upright": [
+      "practice",
+      "skill"
+    ],
+    "reversed": [
+      "perfectionism",
+      "lack of focus"
+    ],
+    "name": "Eight of Pentacles"
   },
-  "Nine of Pentacles": {
+  {
     "arcana": "Minor",
     "suit": "Pentacles",
     "number": 9,
     "rank": "Nine",
     "element": "Earth",
-    "upright": ["independence", "comfort"],
-    "reversed": ["overdependence", "setbacks"]
+    "upright": [
+      "independence",
+      "comfort"
+    ],
+    "reversed": [
+      "overdependence",
+      "setbacks"
+    ],
+    "name": "Nine of Pentacles"
   },
-  "Ten of Pentacles": {
+  {
     "arcana": "Minor",
     "suit": "Pentacles",
     "number": 10,
     "rank": "Ten",
     "element": "Earth",
-    "upright": ["legacy", "lasting security"],
-    "reversed": ["family conflict", "instability"]
+    "upright": [
+      "legacy",
+      "lasting security"
+    ],
+    "reversed": [
+      "family conflict",
+      "instability"
+    ],
+    "name": "Ten of Pentacles"
   },
-  "Page of Pentacles": {
+  {
     "arcana": "Minor",
     "suit": "Pentacles",
     "number": null,
     "rank": "Page",
     "element": "Earth",
-    "upright": ["ambition", "learning"],
-    "reversed": ["procrastination", "lack of progress"]
+    "upright": [
+      "ambition",
+      "learning"
+    ],
+    "reversed": [
+      "procrastination",
+      "lack of progress"
+    ],
+    "name": "Page of Pentacles"
   },
-  "Knight of Pentacles": {
+  {
     "arcana": "Minor",
     "suit": "Pentacles",
     "number": null,
     "rank": "Knight",
     "element": "Earth",
-    "upright": ["reliability", "steady work"],
-    "reversed": ["stagnation", "stubbornness"]
+    "upright": [
+      "reliability",
+      "steady work"
+    ],
+    "reversed": [
+      "stagnation",
+      "stubbornness"
+    ],
+    "name": "Knight of Pentacles"
   },
-  "Queen of Pentacles": {
+  {
     "arcana": "Minor",
     "suit": "Pentacles",
     "number": null,
     "rank": "Queen",
     "element": "Earth",
-    "upright": ["practicality", "care"],
-    "reversed": ["self-neglect", "insecurity"]
+    "upright": [
+      "practicality",
+      "care"
+    ],
+    "reversed": [
+      "self-neglect",
+      "insecurity"
+    ],
+    "name": "Queen of Pentacles"
   },
-  "King of Pentacles": {
+  {
     "arcana": "Minor",
     "suit": "Pentacles",
     "number": null,
     "rank": "King",
     "element": "Earth",
-    "upright": ["success", "stewardship"],
-    "reversed": ["greed", "rigidity"]
+    "upright": [
+      "success",
+      "stewardship"
+    ],
+    "reversed": [
+      "greed",
+      "rigidity"
+    ],
+    "name": "King of Pentacles"
   }
-}
+]
