@@ -10,6 +10,7 @@ from __future__ import annotations
 
 __all__ = [
     "AIProviderError",
+    "AIRateLimitedError",
     "AITimeoutError",
     "AIUnavailableError",
     "CardNotFoundError",
@@ -86,6 +87,13 @@ class AIProviderError(TarotError):
 
 class AIUnavailableError(AIProviderError):
     """Raised when no AI provider is configured or it cannot be reached."""
+
+
+class AIRateLimitedError(AIProviderError):
+    """Raised when the configured AI server rate-limits a request.
+
+    The HTTP layer maps this to ``503 AI_RATE_LIMITED``.
+    """
 
 
 class AITimeoutError(AIProviderError):
