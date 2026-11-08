@@ -20,6 +20,7 @@ from collections import deque
 from collections.abc import Sequence
 from typing import Protocol
 
+from tarot_jupyterlab.ai.prompts import CARD_FACTS_HEADER
 from tarot_jupyterlab.errors import AIProviderError, AITimeoutError, AIUnavailableError
 
 #: Marker emitted by prompts.build_reading_prompt once per drawn card;
@@ -97,7 +98,8 @@ class FakeAIProvider:
         return self._default_response(prompt)
 
     def _default_response(self, prompt: str) -> str:
-        card_count = prompt.count(CARD_KEYWORD_MARKER)
+        card_facts = prompt.rsplit(CARD_FACTS_HEADER, maxsplit=1)[-1]
+        card_count = card_facts.count(CARD_KEYWORD_MARKER)
         if card_count < 1:
             raise AIProviderError(
                 "FakeAIProvider could not infer the drawn card count from the prompt.",

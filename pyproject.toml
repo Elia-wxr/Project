@@ -1,10 +1,6 @@
 # Tarot JupyterLab plugin packaging configuration.
 #
-# Owned by the project Owner (负责人): builds, dependency declarations and
-# the mapping of generated frontend artifacts into the wheel.  The frontend
-# sources themselves are maintained by Agent C under 'frontend/'; the build
-# hook below deliberately fails when the required artifacts are missing or
-# stale, so a backend-only package can never be published.
+# The build hook rebuilds the sidebar and requires the generated assets.
 #
 # Reference: official JupyterLab extension template
 # https://github.com/jupyterlab/extension-template
@@ -19,8 +15,10 @@ build-backend = "hatchling.build"
 
 [project]
 name = "tarot-jupyterlab"
-description = "A JupyterLab sidebar extension for browsing a 78-card tarot deck, casting spreads, saving history and generating AI readings."
+description = "A JupyterLab sidebar for a one-card tarot draw, AI reading, and latest saved record."
 readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
 requires-python = ">=3.10"
 keywords = ["Jupyter", "JupyterLab", "tarot"]
 classifiers = [
@@ -39,11 +37,10 @@ classifiers = [
 ]
 dynamic = ["version"]
 
-# Runtime dependencies.  The shared models, errors and the AI module use the
-# standard library only; 'jupyter_server' is required for the server
-# extension entry point provided by Agent C.
 dependencies = [
+    "jupyter_core>=5,<6",
     "jupyter_server>=2.13.0,<3",
+    "tornado>=6.2,<7",
 ]
 
 [project.optional-dependencies]
@@ -77,26 +74,25 @@ packages = ["src/tarot_jupyterlab"]
 "jupyter-config/jupyter_server_config.d/tarot_jupyterlab.json" = "etc/jupyter/jupyter_server_config.d/tarot_jupyterlab.json"
 
 [tool.hatch.build.targets.wheel.force-include]
-# Package the single source of truth files as importable package resources so
+# Package the deck as an importable package resource so
 # runtime code never depends on the current working directory.
 "card_set.json" = "tarot_jupyterlab/static/card_set.json"
-"schemas/tarot.schema.json" = "tarot_jupyterlab/schemas/tarot.schema.json"
 
 [tool.hatch.build.targets.sdist]
 # sdist must contain every input required to rebuild the wheel from source:
-# Python sources, the card library, frontend sources and lock file, the JSON
-# schema and the server enablement config.
+# Python sources, the card library, frontend sources and lock file, and
+# the server enablement config.
 artifacts = ["src/tarot_jupyterlab/labextension"]
 include = [
     "src",
     "frontend",
-    "schemas",
     "jupyter-config",
     "tests",
     "docs",
     "card_set.json",
     "README.md",
     "Plan.md",
+    "LICENSE",
 ]
 exclude = [".github"]
 
@@ -107,7 +103,6 @@ ensured-targets = [
     "src/tarot_jupyterlab/labextension/static/style.js",
     "src/tarot_jupyterlab/labextension/package.json",
 ]
-skip-if-exists = ["src/tarot_jupyterlab/labextension/static/style.js"]
 
 [tool.hatch.build.hooks.jupyter-builder.build-kwargs]
 path = "frontend"
@@ -116,7 +111,7 @@ npm = ["jlpm"]
 
 [tool.hatch.build.hooks.jupyter-builder.editable-build-kwargs]
 path = "frontend"
-build_cmd = "install:extension"
+build_cmd = "build:prod"
 npm = ["jlpm"]
 source_dir = "src"
 build_dir = "src/tarot_jupyterlab/labextension"

@@ -21,14 +21,14 @@ LANGUAGE_INSTRUCTION: dict[ReadingLanguage, str] = {
     ),
 }
 
+CARD_FACTS_HEADER = "\nCard facts (drawn cards, in spread position order):\n"
+
 _PROMPT_TEMPLATE = """\
 You are a thoughtful tarot reader. This reading is for entertainment and self-reflection only; do not give medical, legal, financial or psychological advice.
 
 Question:
 {question}
-
-Card facts (drawn cards, in spread position order):
-{card_facts}
+{card_facts_header}{card_facts}
 
 {language_instruction}
 
@@ -69,6 +69,7 @@ def build_reading_prompt(session: Session, *, language: ReadingLanguage = "zh-CN
     )
     return _PROMPT_TEMPLATE.format(
         question=question,
+        card_facts_header=CARD_FACTS_HEADER,
         card_facts=card_facts,
         language_instruction=LANGUAGE_INSTRUCTION[language],
     )

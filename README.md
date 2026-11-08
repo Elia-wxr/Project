@@ -1,44 +1,46 @@
-# Tarot Card Set / 塔罗牌集合
+# Tarot JupyterLab
 
-`card_set.json` stores a complete 78-card tarot deck as an array of card objects.
+An English sidebar for JupyterLab 4. Draw one card, request a Socrates reading, and save the most recent result locally. Tarot readings are for entertainment and self-reflection.
 
-`card_set.json` 以对象数组的形式存储完整的 78 张塔罗牌。
+## 用 wheel 本地演示
 
-## Card Properties / 卡牌属性
+在独立的 Python 环境中执行。把命令里的文件名替换为实际下载的 wheel。
 
-| Property / 属性 | Type / 类型 | Meaning / 含义 |
-| --- | --- | --- |
-| `name` | string / 字符串 | The card's English name, such as `The Fool` or `Ace of Wands`. / 卡牌的英文名称，例如 `The Fool` 或 `Ace of Wands`。 |
-| `arcana` | string / 字符串 | The card group: `Major` for the 22 Major Arcana cards, or `Minor` for the 56 Minor Arcana cards. / 卡牌类别：`Major` 表示 22 张大阿卡纳，`Minor` 表示 56 张小阿卡纳。 |
-| `suit` | string or `null` / 字符串或 `null` | The Minor Arcana suit: `Wands`, `Cups`, `Swords`, or `Pentacles`. Major Arcana cards use `null`. / 小阿卡纳花色：`Wands`（权杖）、`Cups`（圣杯）、`Swords`（宝剑）或 `Pentacles`（星币）。大阿卡纳使用 `null`。 |
-| `number` | integer or `null` / 整数或 `null` | The card number. Major Arcana cards use `0` through `21`; numbered Minor Arcana cards use `1` through `10`; court cards use `null`. / 卡牌编号。大阿卡纳使用 `0` 到 `21`；小阿卡纳数字牌使用 `1` 到 `10`；宫廷牌使用 `null`。 |
-| `rank` | string or `null` / 字符串或 `null` | The card rank. Numbered Minor Arcana cards use `Ace`, `Two`, through `Ten`; court cards use `Page`, `Knight`, `Queen`, or `King`; Major Arcana cards use `null`. / 卡牌等级。数字牌使用 `Ace` 到 `Ten`；宫廷牌使用 `Page`、`Knight`、`Queen` 或 `King`；大阿卡纳使用 `null`。 |
-| `element` | string / 字符串 | The associated element: `Fire`, `Water`, `Air`, or `Earth`. / 对应元素：`Fire`（火）、`Water`（水）、`Air`（风）或 `Earth`（土）。 |
-| `upright` | array of strings / 字符串数组 | Short keywords describing common meanings when the card is upright. / 描述卡牌正位常见含义的关键词。 |
-| `reversed` | array of strings / 字符串数组 | Short keywords describing common meanings when the card is reversed. / 描述卡牌逆位常见含义的关键词。 |
-
-## Structure / 数据结构
-
-The top level is an array. The card name is stored in the `name` property rather than being used as an object key.
-
-顶层数据是一个数组。卡牌名称存储在 `name` 属性中，而不是作为对象的键名：
-
-```json
-[
-	{
-		"name": "The Fool",
-		"arcana": "Major",
-		"suit": null,
-		"number": 0,
-		"rank": null,
-		"element": "Air",
-		"upright": ["beginnings", "freedom"],
-		"reversed": ["recklessness", "hesitation"]
-	}
-]
+```powershell
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install "jupyterlab==4.6.5" ".\tarot_jupyterlab-0.1.0-py3-none-any.whl"
+$env:TAROT_DEMO_MODE = "1"
+.\.venv\Scripts\python.exe -m jupyterlab
 ```
 
-## Card Groups / 卡牌分类
+在浏览器的 JupyterLab 左侧打开 **Tarot**。输入一个示例问题，点击 **Draw a card → Generate reading → Save as latest**，确认覆盖提示。重启 JupyterLab 后用 **View latest** 查看保存结果。模拟解读会显示 **Demo reading (simulated)**。
 
-- **Major Arcana / 大阿卡纳：** 22 cards numbered from `0` to `21`; they do not have a suit or rank. / 共 22 张，编号为 `0` 到 `21`；没有花色和等级。
-- **Minor Arcana / 小阿卡纳：** 56 cards divided into four suits. Each suit contains Ace through Ten plus Page, Knight, Queen, and King. / 共 56 张，分为四种花色；每种花色包含 Ace 到 Ten，以及 Page、Knight、Queen 和 King 四张宫廷牌。
+## 接入课程 Socrates
+
+退出 JupyterLab，用课程发给你们的地址、模型名和密钥设置以下变量，再重新启动。同一环境里设置 `TAROT_DEMO_MODE=0` 可关闭模拟模式。
+
+| 环境变量 | 用途 |
+| --- | --- |
+| `SOCRATES_API_BASE` | 课程的 API 基础地址，由适配器附加 `/chat/completions`。 |
+| `SOCRATES_MODEL` | 课程给出的模型名。 |
+| `SOCRATES_API_KEY` | 课程密钥，只在本地配置。 |
+
+真实解读会把问题、牌面和关键词发送给配置的课程服务。三项配置缺失时，后端会提示 AI 不可用，抽牌和保存仍可用。最近一条记录写在当前用户的 Jupyter 数据目录下的 `tarot-jupyterlab/latest.json`，可用 `jupyter --data-dir` 查看数据目录。每次确认保存会替换上一条。
+
+## 从源码构建和测试
+
+需要 Python、Node.js 和可下载依赖的网络。下面使用 Windows PowerShell。将开发环境的 Scripts 放在当前终端的 PATH 中后，`jlpm` 和 `jupyter-builder` 由 Python 开发依赖提供。
+
+```powershell
+python -m venv .venv
+$env:Path = "$(Resolve-Path .\.venv\Scripts);$env:Path"
+python -m pip install "jupyterlab==4.6.5" build "pytest>=8" "pytest-asyncio>=0.23"
+python -m pytest
+python -m build --wheel
+```
+
+wheel 生成在 `dist/`。用上面的本地演示步骤在另一个 Python 环境安装它。只检查或重建前端时，在 `frontend/` 执行 `jlpm install --immutable` 和 `jlpm build:prod`。Windows 之外使用相应虚拟环境的 `bin/` 目录和环境变量语法。
+
+- [接口与技术学习指南](docs/learning.md)
+- [两周分工和正式 PyPI 验收计划](Plan.md)
+- [原始牌库字段说明](docs/card-set.md)
