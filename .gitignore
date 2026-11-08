@@ -218,3 +218,5 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+# Generated JupyterLab prebuilt extension
+/src/tarot_jupyterlab/labextension/

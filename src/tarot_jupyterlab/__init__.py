@@ -9,3 +9,7 @@ from __future__ import annotations
 from tarot_jupyterlab._version import __version__
 
 __all__ = ["__version__"]
+
+
+def _jupyter_server_extension_points() -> list[dict[str, str]]:
+    return [{"module": "tarot_jupyterlab.app"}]
