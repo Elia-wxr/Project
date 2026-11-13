@@ -1,0 +1,6 @@
+{
+  "error": {
+    "code": "CONFIG_CONFLICT",
+    "message": "Settings changed on the server. Your draft is kept. Load the saved configuration, then try again."
+  }
+}

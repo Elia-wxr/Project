@@ -1,0 +1,14 @@
+{
+  "config_revision": 1,
+  "settings": {
+    "mode": "real",
+    "base_url": "https://api.openai.com/v1",
+    "model": "",
+    "auth_mode": "bearer",
+    "timeout_seconds": 30
+  },
+  "key_present": false,
+  "key_source": "none",
+  "locked_fields": [],
+  "status": "not_configured"
+}

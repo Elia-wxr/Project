@@ -1,0 +1,5 @@
+{
+  "ok": true,
+  "latency_ms": 42,
+  "message": "The server answered a short test prompt."
+}
