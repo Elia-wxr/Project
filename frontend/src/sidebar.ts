@@ -1,28 +1,35 @@
 import { Widget } from '@lumino/widgets';
 
 import { TarotClient } from './api';
+import { TarotSettingsPanel } from './settings';
 import type { SessionRecord } from './types';
 
 const template = `
-  <h2>Tarot</h2>
-  <p>For entertainment and self-reflection only.</p>
-  <p>Your question and card details are sent to the configured AI server when you request a real reading.</p>
-  <form>
-    <label for="tarot-question">Your question</label>
-    <textarea id="tarot-question" required rows="3"></textarea>
-    <button type="submit" data-action="draw">Draw a card</button>
-  </form>
-  <p data-region="status" role="status" aria-live="polite"></p>
-  <section aria-label="Current card" data-region="current"></section>
-  <div class="tarot-actions">
-    <button type="button" data-action="read">Generate reading</button>
-    <button type="button" data-action="save">Save as latest</button>
+  <div class="tarot-tabs" role="tablist" aria-label="Tarot views">
+    <button type="button" class="tarot-tab" data-tab="reading" role="tab" aria-selected="true">Reading</button>
+    <button type="button" class="tarot-tab" data-tab="settings" role="tab" aria-selected="false">AI settings</button>
   </div>
-  <section aria-label="Latest saved reading">
-    <h3>Latest saved reading</h3>
-    <button type="button" data-action="latest">View latest</button>
-    <div data-region="history"></div>
-  </section>
+  <div data-view="reading">
+    <h2>Tarot</h2>
+    <p>For entertainment and self-reflection only.</p>
+    <p>Your question and card details are sent to the configured AI server when you request a real reading.</p>
+    <form>
+      <label for="tarot-question">Your question</label>
+      <textarea id="tarot-question" required rows="3"></textarea>
+      <button type="submit" data-action="draw">Draw a card</button>
+    </form>
+    <p data-region="status" role="status" aria-live="polite"></p>
+    <section aria-label="Current card" data-region="current"></section>
+    <div class="tarot-actions">
+      <button type="button" data-action="read">Generate reading</button>
+      <button type="button" data-action="save">Save as latest</button>
+    </div>
+    <section aria-label="Latest saved reading">
+      <h3>Latest saved reading</h3>
+      <button type="button" data-action="latest">View latest</button>
+      <div data-region="history"></div>
+    </section>
+  </div>
 `;
 
 export class TarotSidebar extends Widget {
@@ -34,6 +41,10 @@ export class TarotSidebar extends Widget {
   private readonly status: HTMLElement;
   private readonly current: HTMLElement;
   private readonly history: HTMLElement;
+  private readonly readingView: HTMLElement;
+  private readonly readingTab: HTMLButtonElement;
+  private readonly settingsTab: HTMLButtonElement;
+  private readonly settingsPanel: TarotSettingsPanel;
   private active: SessionRecord | null = null;
   private busy = false;
 
@@ -53,6 +64,27 @@ export class TarotSidebar extends Widget {
     this.status = this.node.querySelector('[data-region="status"]')!;
     this.current = this.node.querySelector('[data-region="current"]')!;
     this.history = this.node.querySelector('[data-region="history"]')!;
+    this.readingView = this.node.querySelector('[data-view="reading"]')!;
+    this.readingTab = this.node.querySelector('[data-tab="reading"]')!;
+    this.settingsTab = this.node.querySelector('[data-tab="settings"]')!;
+
+    // The AI settings panel (B) is mounted here; it owns its own state.
+    this.settingsPanel = new TarotSettingsPanel(client, {
+      onSaved: snapshot => {
+        if (snapshot.settings.mode === 'demo') {
+          this.status.textContent = 'Saved. Demo mode will use simulated readings.';
+        }
+      }
+    });
+    this.settingsPanel.hide();
+    this.node.append(this.settingsPanel.node);
+
+    this.readingTab.addEventListener('click', () => {
+      this.showView('reading');
+    });
+    this.settingsTab.addEventListener('click', () => {
+      this.showView('settings');
+    });
 
     this.node.querySelector('form')!.addEventListener('submit', event => {
       event.preventDefault();
@@ -68,8 +100,13 @@ export class TarotSidebar extends Widget {
       const sessionId = this.active.session.session_id;
       void this.run(async () => {
         this.status.textContent = 'Generating reading…';
-        this.setActive(await this.client.reading(sessionId));
-        this.status.textContent = 'Reading ready. Unsaved.';
+        this.settingsPanel.setReadingInProgress(true);
+        try {
+          this.setActive(await this.client.reading(sessionId));
+          this.status.textContent = 'Reading ready. Unsaved.';
+        } finally {
+          this.settingsPanel.setReadingInProgress(false);
+        }
       });
     });
     this.saveButton.addEventListener('click', () => {
@@ -100,6 +137,22 @@ export class TarotSidebar extends Widget {
       await this.client.health();
       this.status.textContent = 'Connected to the Tarot server.';
     });
+  }
+
+  private showView(view: 'reading' | 'settings'): void {
+    if (view === 'settings') {
+      this.readingView.hidden = true;
+      this.settingsPanel.show();
+    } else {
+      // A dirty draft keeps the panel open until the user confirms discarding.
+      if (!this.settingsPanel.confirmDiscard()) {
+        return;
+      }
+      this.settingsPanel.hide();
+      this.readingView.hidden = false;
+    }
+    this.readingTab.setAttribute('aria-selected', view === 'reading' ? 'true' : 'false');
+    this.settingsTab.setAttribute('aria-selected', view === 'settings' ? 'true' : 'false');
   }
 
   private async run(operation: () => Promise<void>): Promise<void> {

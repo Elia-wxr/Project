@@ -9,6 +9,8 @@ from pathlib import Path
 from typing import Any
 
 from tarot_jupyterlab.ai import AIProvider, generate_reading
+from tarot_jupyterlab.ai.config import AIConfigStore
+from tarot_jupyterlab.ai.provider import FakeAIProvider, OpenAICompatibleProvider
 from tarot_jupyterlab.cards import create_single_session
 from tarot_jupyterlab.errors import (
     AITimeoutError,
@@ -20,9 +22,7 @@ from tarot_jupyterlab.errors import (
 from tarot_jupyterlab.history import load_latest, save_latest
 from tarot_jupyterlab.models import Card, SessionRecord
 
-from tarot_jupyterlab.ai.config import AIConfigStore
-from tarot_jupyterlab.ai.provider import FakeAIProvider, OpenAICompatibleProvider
-from tarot_jupyterlab.errors import AIUnavailableError
+
 class TarotService:
     """One instance per Jupyter Server, used on its request event loop."""
 
@@ -33,11 +33,13 @@ class TarotService:
         provider: AIProvider | None = None,
         *,
         reading_timeout: float = 45,
+        ai_store: AIConfigStore | None = None,
     ) -> None:
         self._cards = cards
         self._history_path = history_path
         self._provider = provider
         self._reading_timeout = reading_timeout
+        self._ai_store = ai_store
         self._active: SessionRecord | None = None
         self._reading_in_progress = False
 
@@ -51,16 +53,20 @@ class TarotService:
         self._require_idle()
         if record.reading is not None:
             return record
-        if self._provider is None:
-            raise AIUnavailableError("the configured AI server is not configured. You can still save the card.")
+        provider, timeout = self._provider_for_reading()
+        if provider is None:
+            raise AIUnavailableError(
+                "No AI is configured. Open AI settings and choose a model or Demo mode. "
+                "You can still save the card.",
+            )
 
         snapshot = deepcopy(record.session)
         self._reading_in_progress = True
         try:
             # The worker only computes a Reading. Only this coroutine can publish it.
             reading = await asyncio.wait_for(
-                asyncio.to_thread(generate_reading, snapshot, self._provider, language="en"),
-                timeout=self._reading_timeout,
+                asyncio.to_thread(generate_reading, snapshot, provider, language="en"),
+                timeout=timeout,
             )
             self._get_active(session_id)
             session = replace(record.session, updated_at=reading.created_at)
@@ -92,22 +98,36 @@ class TarotService:
     def _require_idle(self) -> None:
         if self._reading_in_progress:
             raise ReadingInProgressError("Wait for the current reading to finish.")
-    def build_provider(snapshot: dict):
-        """snapshot = AIConfigStore.provider_kwargs() taken before the thread starts."""
-        if snapshot["mode"] == "demo":
-            return FakeAIProvider()
-        if not snapshot["model"]:
-            raise AIUnavailableError(
-                "No AI model is configured. Open AI settings and choose a model."
+
+    @property
+    def is_generating(self) -> bool:
+        """True while a reading request is running (used by the AI config handlers)."""
+        return self._reading_in_progress
+
+    def _provider_for_reading(self) -> tuple[AIProvider | None, float]:
+        """Build the provider for one reading from the effective AI config snapshot.
+
+        The snapshot is taken once per request, so a mid-flight settings change
+        can never swap the provider or timeout of the running reading.  With no
+        config store the legacy injected provider is used instead.
+        """
+        if self._ai_store is not None:
+            kwargs = self._ai_store.provider_kwargs()
+            timeout = float(kwargs["timeout_seconds"]) + 5
+            if kwargs["mode"] == "demo":
+                return FakeAIProvider(), timeout
+            if not kwargs["model"]:
+                return None, timeout
+            if kwargs["auth_mode"] == "bearer" and not kwargs["api_key"]:
+                return None, timeout
+            return (
+                OpenAICompatibleProvider(
+                    base_url=kwargs["base_url"],
+                    model=kwargs["model"],
+                    api_key=kwargs["api_key"],
+                    auth_mode=kwargs["auth_mode"],
+                    timeout_seconds=kwargs["timeout_seconds"],
+                ),
+                timeout,
             )
-        if snapshot["auth_mode"] == "bearer" and not snapshot["api_key"]:
-            raise AIUnavailableError(
-                "No API key is available. Add one in AI settings or provide TAROT_AI_API_KEY."
-            )
-        return OpenAICompatibleProvider(
-            base_url=snapshot["base_url"],
-            model=snapshot["model"],
-            api_key=snapshot["api_key"],
-            auth_mode=snapshot["auth_mode"],
-            timeout_seconds=snapshot["timeout_seconds"],
-        )
+        return self._provider, self._reading_timeout

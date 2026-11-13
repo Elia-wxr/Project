@@ -14,15 +14,17 @@ written to disk, never returned in a snapshot and never logged.
 
 from __future__ import annotations
 
+import contextlib
 import ipaddress
 import json
 import logging
 import os
 import tempfile
 import threading
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass, replace
 from pathlib import Path
-from typing import Any, Callable, Mapping
+from typing import Any
 from urllib.parse import urlsplit, urlunsplit
 
 from tarot_jupyterlab.errors import (
@@ -60,9 +62,9 @@ _BLOCKED_HOSTS = frozenset(
     }
 )
 _BLOCKED_NETWORKS = (
-    ipaddress.ip_network("169.254.0.0/16"),      # link-local + cloud metadata
+    ipaddress.ip_network("169.254.0.0/16"),  # link-local + cloud metadata
     ipaddress.ip_network("100.100.100.200/32"),  # Alibaba Cloud metadata
-    ipaddress.ip_network("fd00:ec2::254/128"),   # AWS IMDSv6
+    ipaddress.ip_network("fd00:ec2::254/128"),  # AWS IMDSv6
 )
 
 Resolver = Callable[[str], list[str]]
@@ -208,14 +210,14 @@ def _validate_auth_mode(value: Any) -> str:
 
 def _validate_timeout(value: Any) -> float:
     if isinstance(value, bool) or not isinstance(value, (int, float)):
-        raise InvalidConfigError("Timeout must be a number of seconds.", field="timeout_seconds")
+        raise InvalidConfigError("timeout_seconds", "Timeout must be a number of seconds.")
     timeout = float(value)
     if not timeout == timeout or timeout in (float("inf"), float("-inf")):
-        raise InvalidConfigError("Timeout must be finite.", field="timeout_seconds")
+        raise InvalidConfigError("timeout_seconds", "Timeout must be finite.")
     if timeout < MIN_TIMEOUT_SECONDS or timeout > MAX_TIMEOUT_SECONDS:
         raise InvalidConfigError(
+            "timeout_seconds",
             f"Timeout must be between {MIN_TIMEOUT_SECONDS:g} and {MAX_TIMEOUT_SECONDS:g} seconds.",
-            field="timeout_seconds"
         )
     return timeout
 
@@ -305,13 +307,14 @@ class AIConfigStore:
             payload = json.loads(self._path.read_text(encoding="utf-8"))
         except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
             raise StorageError(
-                "The saved AI configuration could not be read. "
-                "Fix or remove the file to continue."
+                "The saved AI configuration could not be read. Fix or remove the file to continue."
             ) from exc
         if not isinstance(payload, dict):
             raise StorageError("The saved AI configuration is not a valid object.")
         try:
-            self._saved = settings_from_mapping(payload.get("settings", {}), resolver=self._resolver)
+            self._saved = settings_from_mapping(
+                payload.get("settings", {}), resolver=self._resolver
+            )
             revision = payload.get("config_revision", 1)
             self._revision = int(revision) if isinstance(revision, int) else 1
         except InvalidConfigError as exc:
@@ -329,10 +332,8 @@ class AIConfigStore:
                 os.fsync(handle.fileno())
             os.replace(tmp_name, self._path)
         except OSError as exc:
-            try:
+            with contextlib.suppress(OSError):
                 os.unlink(tmp_name)
-            except OSError:
-                pass
             raise StorageError("The AI configuration could not be saved.") from exc
 
     # -- environment -------------------------------------------------------
@@ -349,7 +350,9 @@ class AIConfigStore:
             try:
                 overrides["base_url"] = normalize_base_url(base, resolver=self._resolver)
             except InvalidConfigError:
-                LOGGER.warning("%s is not a valid base URL and was ignored.", ENV_FIELDS["base_url"])
+                LOGGER.warning(
+                    "%s is not a valid base URL and was ignored.", ENV_FIELDS["base_url"]
+                )
 
         model = env.get(ENV_FIELDS["model"], "").strip()
         if model:
@@ -460,7 +463,8 @@ class AIConfigStore:
             if name in locked:
                 if not _same_value(name, value, current):
                     raise InvalidConfigError(
-                        name, f"{name} is controlled by the server environment and cannot be changed."
+                        name,
+                        f"{name} is controlled by the server environment and cannot be changed.",
                     )
                 continue
             allowed[name] = value
