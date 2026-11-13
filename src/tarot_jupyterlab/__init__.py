@@ -13,3 +13,7 @@ __all__ = ["__version__"]
 
 def _jupyter_server_extension_points() -> list[dict[str, str]]:
     return [{"module": "tarot_jupyterlab.app"}]
+
+
+def _jupyter_labextension_paths() -> list[dict[str, str]]:
+    return [{"src": "labextension", "dest": "tarot-jupyterlab"}]
