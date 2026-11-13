@@ -81,20 +81,17 @@ packages = ["src/tarot_jupyterlab"]
 [tool.hatch.build.targets.sdist]
 # sdist must contain every input required to rebuild the wheel from source:
 # Python sources, the card library, frontend sources and lock file, and
-# the server enablement config.
+# the server enablement config.  The default VCS-based file selection is
+# used so that untracked frontend build state (node_modules, .yarn, lib)
+# never leaks into the archive; the prebuilt labextension is added through
+# artifacts.
 artifacts = ["src/tarot_jupyterlab/labextension"]
-include = [
-    "src",
-    "frontend",
-    "jupyter-config",
-    "tests",
-    "docs",
-    "card_set.json",
-    "README.md",
-    "Plan.md",
-    "LICENSE",
+exclude = [
+    ".github",
+    "/frontend/node_modules",
+    "/frontend/.yarn",
+    "/frontend/lib",
 ]
-exclude = [".github"]
 
 [tool.hatch.build.hooks.jupyter-builder]
 dependencies = ["hatch-jupyter-builder>=0.5"]
