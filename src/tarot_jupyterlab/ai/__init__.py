@@ -9,12 +9,12 @@ from __future__ import annotations
 
 from tarot_jupyterlab.ai.interpreter import generate_reading
 from tarot_jupyterlab.ai.prompts import build_reading_prompt
-from tarot_jupyterlab.ai.provider import AIProvider, FakeAIProvider, SocratesProvider
+from tarot_jupyterlab.ai.provider import AIProvider, FakeAIProvider, OpenAICompatibleProvider
 
 __all__ = [
     "AIProvider",
     "FakeAIProvider",
-    "SocratesProvider",
+    "OpenAICompatibleProvider",
     "build_reading_prompt",
     "generate_reading",
 ]

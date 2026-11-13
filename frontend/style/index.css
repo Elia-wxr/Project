@@ -1,0 +1,22 @@
+.tarot-sidebar {
+  padding: 12px;
+  overflow: auto;
+  background: var(--jp-layout-color1);
+  color: var(--jp-ui-font-color1);
+}
+
+.tarot-sidebar form,
+.tarot-sidebar .tarot-actions {
+  display: grid;
+  gap: 8px;
+}
+
+.tarot-sidebar textarea,
+.tarot-sidebar button {
+  font: inherit;
+}
+
+.tarot-sidebar p {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}

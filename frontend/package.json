@@ -1,0 +1,27 @@
+{
+  "name": "tarot-jupyterlab",
+  "version": "0.1.0",
+  "private": true,
+  "description": "An English tarot sidebar for JupyterLab",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "style": "style/index.css",
+  "scripts": {
+    "build:prod": "tsc && jupyter-builder build ."
+  },
+  "dependencies": {
+    "@jupyterlab/application": "^4.0.0",
+    "@jupyterlab/coreutils": "^6.0.0",
+    "@jupyterlab/services": "^7.0.0",
+    "@lumino/widgets": "^2.0.0"
+  },
+  "devDependencies": {
+    "@jupyter/builder": "^1.2.0",
+    "typescript": "~5.5.4"
+  },
+  "jupyterlab": {
+    "extension": true,
+    "outputDir": "../src/tarot_jupyterlab/labextension"
+  }
+}
