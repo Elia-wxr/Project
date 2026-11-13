@@ -1,0 +1,107 @@
+.jp-TarotSettingsPanel {
+  box-sizing: border-box;
+  min-width: 0;
+  color: var(--jp-ui-font-color1);
+  background: var(--jp-layout-color1);
+  font-size: var(--jp-ui-font-size1);
+}
+
+.jp-TarotSettingsPanel-body {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  overflow: auto;
+}
+
+.jp-TarotSettingsPanel h2 {
+  margin: 0;
+  font-size: var(--jp-ui-font-size2);
+}
+
+.jp-TarotSettingsPanel form,
+.jp-TarotSettingsPanel fieldset,
+.jp-TarotSettingsPanel-actions,
+.jp-TarotSettingsPanel-choice,
+.jp-TarotSettingsPanel-key {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.jp-TarotSettingsPanel fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.jp-TarotSettingsPanel label {
+  display: grid;
+  gap: 4px;
+}
+
+.jp-TarotSettingsPanel input,
+.jp-TarotSettingsPanel select,
+.jp-TarotSettingsPanel button {
+  box-sizing: border-box;
+  font: inherit;
+  color: var(--jp-ui-font-color1);
+  background: var(--jp-input-background);
+  border: 1px solid var(--jp-input-border-color);
+  border-radius: var(--jp-border-radius);
+  min-height: 28px;
+  max-width: 100%;
+}
+
+.jp-TarotSettingsPanel button {
+  padding: 4px 8px;
+  background: var(--jp-layout-color2);
+  border-color: var(--jp-border-color2);
+  cursor: pointer;
+}
+
+.jp-TarotSettingsPanel button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.jp-TarotSettingsPanel input:focus-visible,
+.jp-TarotSettingsPanel select:focus-visible,
+.jp-TarotSettingsPanel button:focus-visible {
+  outline: 2px solid var(--jp-brand-color1);
+  outline-offset: 1px;
+}
+
+.jp-TarotSettingsPanel-key {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+}
+
+.jp-TarotSettingsPanel-actions {
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+}
+
+.jp-TarotSettingsPanel-hint,
+.jp-TarotSettingsPanel-error,
+.jp-TarotSettingsPanel-simulated,
+.jp-TarotSettingsPanel p {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.jp-TarotSettingsPanel-hint,
+.jp-TarotSettingsPanel-simulated {
+  color: var(--jp-ui-font-color2);
+}
+
+.jp-TarotSettingsPanel-error:empty {
+  display: none;
+}
+
+.jp-TarotSettingsPanel-error {
+  color: var(--jp-error-color1);
+}
+
+.jp-TarotSettingsPanel [aria-invalid="true"] {
+  border-color: var(--jp-error-color1);
+}
