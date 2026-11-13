@@ -9,14 +9,17 @@ return values.
 from __future__ import annotations
 
 __all__ = [
+    "AIConfigBusyError",
     "AIProviderError",
     "AIRateLimitedError",
     "AITimeoutError",
     "AIUnavailableError",
     "CardNotFoundError",
+    "ConfigConflictError",
     "DuplicateSessionError",
     "HistoryNotFoundError",
     "InvalidCardSetError",
+    "InvalidConfigError",
     "InvalidSessionError",
     "ReadingInProgressError",
     "RecordValidationError",
@@ -25,14 +28,23 @@ __all__ = [
     "SessionRevisionConflictError",
     "StaleReadingError",
     "StorageError",
-    "ConfigConflictError",
-    "InvalidConfigError",
     "TarotError",
 ]
 
 
 class TarotError(Exception):
-    """Base exception for expected application errors."""
+    """Base exception for expected application errors.
+
+    Subclasses that reach the AI config handlers override ``code``,
+    ``status_code`` and :meth:`to_dict`; the defaults keep plain business
+    errors serializable as a generic ``INTERNAL_ERROR`` response.
+    """
+
+    code = "INTERNAL_ERROR"
+    status_code = 500
+
+    def to_dict(self) -> dict[str, dict[str, object]]:
+        return {"error": {"code": self.code, "message": str(self)}}
 
 
 class CardNotFoundError(TarotError):
@@ -100,22 +112,13 @@ class AIRateLimitedError(AIProviderError):
 
 class AITimeoutError(AIProviderError):
     """Raised when an AI request exceeds its time budget."""
+
+
 class ConfigConflictError(TarotError):
-    """Raised when config revision conflicts."""
-    pass
+    """409 CONFIG_CONFLICT: the config_revision is stale."""
 
-
-class InvalidConfigError(TarotError):
-    """Raised when config data is invalid."""
-    def __init__(self, message: str, field: str = ""):
-        super().__init__(message)
-        self.field = field
-# PASTE TARGET: src/tarot_jupyterlab/errors.py  (append to the end of the file)
-#
-# Do NOT paste the `from __future__ import annotations` line: errors.py almost
-# certainly already has it at the top, and a second one mid-file is a SyntaxError.
-# If your errors.py already defines TarotError, delete that class here and let the
-# new classes inherit from the existing base instead.
+    code = "CONFIG_CONFLICT"
+    status_code = 409
 
 
 class InvalidConfigError(TarotError):
@@ -126,17 +129,13 @@ class InvalidConfigError(TarotError):
 
     def __init__(self, field: str, message: str) -> None:
         super().__init__(message)
+        self.message = message
         self.field = field
 
-    def to_dict(self) -> dict:
-        return {"error": {"code": self.code, "message": self.message, "field": self.field}}
-
-
-class ConfigConflictError(TarotError):
-    """409 CONFIG_CONFLICT: the config_revision is stale."""
-
-    code = "CONFIG_CONFLICT"
-    status_code = 409
+    def to_dict(self) -> dict[str, dict[str, object]]:
+        payload = super().to_dict()
+        payload["error"]["field"] = self.field
+        return payload
 
 
 class AIConfigBusyError(TarotError):
@@ -144,18 +143,3 @@ class AIConfigBusyError(TarotError):
 
     code = "READING_IN_PROGRESS"
     status_code = 409
-
-
-# If errors.py has no TarotError yet, append this base class as well and put the
-# three classes above *after* it:
-#
-# class TarotError(Exception):
-#     code = "INTERNAL_ERROR"
-#     status_code = 500
-#
-#     def __init__(self, message: str) -> None:
-#         super().__init__(message)
-#         self.message = message
-#
-#     def to_dict(self) -> dict:
-#         return {"error": {"code": self.code, "message": self.message}}

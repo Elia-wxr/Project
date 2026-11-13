@@ -1,6 +1,7 @@
+"""Jupyter Server registration and the JSON boundary for the Tarot sidebar."""
+
 from __future__ import annotations
 
-# 1. Standard Library
 import asyncio
 import json
 import os
@@ -8,11 +9,9 @@ import time
 from collections.abc import Iterator
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 from uuid import UUID
 
-# 2. Third-party
-import tornado.web
 from jupyter_core.paths import jupyter_data_dir
 from jupyter_server.base.handlers import APIHandler
 from jupyter_server.serverapp import ServerApp
@@ -20,15 +19,9 @@ from jupyter_server.utils import url_path_join
 from tornado import web
 from tornado.web import authenticated
 
-# 3.Local Application
 from tarot_jupyterlab.ai import AIProvider, FakeAIProvider, OpenAICompatibleProvider
-from tarot_jupyterlab.ai.config import (
-    AIConfigStore,
-    InvalidConfigError,
-    default_config_path,
-    system_resolver,
-)
-from tarot_jupyterlab.ai.provider import OpenAICompatibleProvider
+from tarot_jupyterlab.ai.config import AIConfigStore, InvalidConfigError
+from tarot_jupyterlab.ai.provider import AuthMode
 from tarot_jupyterlab.cards import load_card_set
 from tarot_jupyterlab.errors import (
     AIConfigBusyError,
@@ -44,6 +37,7 @@ from tarot_jupyterlab.errors import (
 )
 from tarot_jupyterlab.history import record_to_dict
 from tarot_jupyterlab.service import TarotService
+
 TEST_PROMPT = "Reply with the single word: ok"
 
 _ERRORS = (
@@ -57,7 +51,7 @@ _ERRORS = (
     (StorageError, 500, "STORAGE_ERROR"),
 )
 
-TEST_PROMPT = "Reply with the single word: ok"
+
 class TarotHandler(APIHandler):
     def initialize(self, service: TarotService) -> None:
         self.service = service
@@ -148,11 +142,11 @@ def _session_id(value: object) -> str:
 def _configured_provider() -> AIProvider | None:
     if os.environ.get("TAROT_DEMO_MODE") == "1":
         return FakeAIProvider()
-    api_base = os.environ.get("TAROT_AI_API_BASE", "").strip()
+    base_url = os.environ.get("TAROT_AI_BASE_URL", "").strip()
     api_key = os.environ.get("TAROT_AI_API_KEY", "").strip()
     model = os.environ.get("TAROT_AI_MODEL", "").strip()
-    if api_base and api_key and model:
-        return OpenAICompatibleProvider(api_base=api_base, api_key=api_key, model=model)
+    if base_url and api_key and model:
+        return OpenAICompatibleProvider(base_url=base_url, api_key=api_key, model=model)
     return None
 
 
@@ -173,10 +167,12 @@ def _load_jupyter_server_extension(serverapp: ServerApp) -> None:
             for path, handler in routes
         ],
     )
+
+
 class AIConfigHandler(APIHandler):
     """Shared error -> HTTP mapping. Merge this table into an existing write_error."""
 
-    def write_error(self, status_code: int, **kwargs: object) -> None:
+    def write_error(self, status_code: int, **kwargs: Any) -> None:
         exc = kwargs.get("exc_info", (None, None, None))[1]
         if isinstance(exc, TarotError):
             status_code = exc.status_code
@@ -256,7 +252,7 @@ class AITestHandler(AIConfigHandler):
             base_url=draft.base_url,
             model=draft.model,
             api_key=key or "",
-            auth_mode=draft.auth_mode,
+            auth_mode=cast(AuthMode, draft.auth_mode),
             timeout_seconds=draft.timeout_seconds,
         )
         started = time.monotonic()
@@ -266,7 +262,8 @@ class AITestHandler(AIConfigHandler):
             timeout=draft.timeout_seconds + 5,
         )
         latency_ms = int((time.monotonic() - started) * 1000)
-        host = draft.base_url.split("://", 1)[-1].split("/", 1)[0]  # echo host only, no path, no key
+        # Echo the host only: no path, no key.
+        host = draft.base_url.split("://", 1)[-1].split("/", 1)[0]
         self.finish(
             json.dumps(
                 {
@@ -276,60 +273,3 @@ class AITestHandler(AIConfigHandler):
                 }
             )
         )
-
-
-# --- registration (in setup_handlers / _load_jupyter_server_extension) ------
-#
-# from jupyter_server.utils import url_path_join
-# from jupyter_core.paths import jupyter_config_dir
-# from pathlib import Path
-#
-# store = AIConfigStore(default_config_path(), resolver=system_resolver)
-# web_app.settings["tarot_ai_store"] = store
-# Keep the five existing handlers as they are; just append these entries:
-#
-# handlers = [
-#     (url_path_join(base_url, "tarot", "api", "ai", "settings"), AISettingsHandler),
-#     (url_path_join(base_url, "tarot", "api", "ai", "test"), AITestHandler),
-# ]
-# web_app.add_handlers(".*$", handlers)
-
-
-# ===========================================================================
-# 3) src/tarot_jupyterlab/service.py  -- runtime wiring
-# ===========================================================================
-#
-# Only four points matter:
-#   (a) take one provider_kwargs() snapshot when a reading starts, so a config
-#       change mid-flight cannot affect that reading;
-#   (b) overall wait ceiling = timeout_seconds + 5 (do not hard-code 45 seconds);
-#   (c) a late result is written back only if the request token and session_id
-#       still match;
-#   (d) on failure the active record, the old config and the old key stay intact.
-#
-# class TarotService:
-#     def __init__(self, ..., ai_store: AIConfigStore) -> None:
-#         self._ai_store = ai_store
-#         self._generating = False          # used by the handler for the busy check
-#
-#     @property
-#     def is_generating(self) -> bool:
-#         return self._generating
-#
-#     def _provider(self, kwargs: dict):
-#         if kwargs["mode"] == "demo":
-#             from tarot_jupyterlab.ai.provider import FakeAIProvider
-#             return FakeAIProvider()
-#         return OpenAICompatibleProvider(
-#             base_url=kwargs["base_url"],
-#             model=kwargs["model"],
-#             api_key=kwargs["api_key"],
-#             auth_mode=kwargs["auth_mode"],
-#             timeout_seconds=kwargs["timeout_seconds"],
-#         )
-#
-#     def _generate(self, session, language: str):
-#         snapshot = self._ai_store.provider_kwargs()   # snapshot; later edits do not affect this run
-#         provider = self._provider(snapshot)
-#         deadline = snapshot["timeout_seconds"] + 5
-#         ...

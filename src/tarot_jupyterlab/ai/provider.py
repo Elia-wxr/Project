@@ -323,4 +323,4 @@ def _parse_chat_response(raw: bytes) -> str:
     return content
 
 
-__all__ = ["AIProvider", "FakeAIProvider", "OpenAICompatibleProvider"]
+__all__ = ["AIProvider", "AuthMode", "FakeAIProvider", "OpenAICompatibleProvider"]
