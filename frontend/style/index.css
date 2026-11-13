@@ -1,3 +1,5 @@
+@import './settings.css';
+
 .tarot-sidebar {
   padding: 12px;
   overflow: auto;
