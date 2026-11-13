@@ -6,7 +6,7 @@ import type { SessionRecord } from './types';
 const template = `
   <h2>Tarot</h2>
   <p>For entertainment and self-reflection only.</p>
-  <p>Your question and card details are sent to Socrates when you request a real reading.</p>
+  <p>Your question and card details are sent to the configured AI server when you request a real reading.</p>
   <form>
     <label for="tarot-question">Your question</label>
     <textarea id="tarot-question" required rows="3"></textarea>

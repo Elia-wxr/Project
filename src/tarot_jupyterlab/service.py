@@ -20,7 +20,9 @@ from tarot_jupyterlab.errors import (
 from tarot_jupyterlab.history import load_latest, save_latest
 from tarot_jupyterlab.models import Card, SessionRecord
 
-
+from tarot_jupyterlab.ai.config import AIConfigStore
+from tarot_jupyterlab.ai.provider import FakeAIProvider, OpenAICompatibleProvider
+from tarot_jupyterlab.errors import AIUnavailableError
 class TarotService:
     """One instance per Jupyter Server, used on its request event loop."""
 
@@ -50,7 +52,7 @@ class TarotService:
         if record.reading is not None:
             return record
         if self._provider is None:
-            raise AIUnavailableError("Socrates is not configured. You can still save the card.")
+            raise AIUnavailableError("the configured AI server is not configured. You can still save the card.")
 
         snapshot = deepcopy(record.session)
         self._reading_in_progress = True
@@ -90,3 +92,22 @@ class TarotService:
     def _require_idle(self) -> None:
         if self._reading_in_progress:
             raise ReadingInProgressError("Wait for the current reading to finish.")
+    def build_provider(snapshot: dict):
+        """snapshot = AIConfigStore.provider_kwargs() taken before the thread starts."""
+        if snapshot["mode"] == "demo":
+            return FakeAIProvider()
+        if not snapshot["model"]:
+            raise AIUnavailableError(
+                "No AI model is configured. Open AI settings and choose a model."
+            )
+        if snapshot["auth_mode"] == "bearer" and not snapshot["api_key"]:
+            raise AIUnavailableError(
+                "No API key is available. Add one in AI settings or provide TAROT_AI_API_KEY."
+            )
+        return OpenAICompatibleProvider(
+            base_url=snapshot["base_url"],
+            model=snapshot["model"],
+            api_key=snapshot["api_key"],
+            auth_mode=snapshot["auth_mode"],
+            timeout_seconds=snapshot["timeout_seconds"],
+        )
