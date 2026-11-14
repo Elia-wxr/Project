@@ -1,0 +1,48 @@
+name: Build PyPI packages
+
+# Build the Python sdist and wheel on every commit and upload them as
+# workflow artifacts. The wheel includes the prebuilt JupyterLab frontend
+# (the hatch-jupyter-builder hook runs the frontend build automatically).
+#
+# To publish to PyPI instead, replace the upload step with
+# `pypa/gh-action-pypi-publish` and add a `PYPI_API_TOKEN` secret, and
+# consider restricting the trigger to version tags.
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install build dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install build
+
+      - name: Build sdist and wheel
+        run: python -m build
+
+      - name: Upload PyPI packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: pypi-packages
+          path: dist/*
+          if-no-files-found: error

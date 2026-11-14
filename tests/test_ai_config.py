@@ -28,6 +28,7 @@ def make_store(tmp_path: Path, environ: dict[str, str] | None = None, **kwargs) 
 
 # --------------------------------------------------------------------------- #
 
+
 # --------------------------------------------------------------------------- #
 def test_fresh_store_is_not_configured_and_leaks_nothing(tmp_path):
     store = make_store(tmp_path)
@@ -63,6 +64,7 @@ def test_demo_mode_status_and_no_key_needed(tmp_path):
 
 
 # --------------------------------------------------------------------------- #
+
 
 # --------------------------------------------------------------------------- #
 def test_non_sensitive_settings_survive_restart_but_key_does_not(tmp_path):
@@ -112,6 +114,7 @@ def test_write_failure_keeps_old_config_and_key(tmp_path, monkeypatch):
 
 # --------------------------------------------------------------------------- #
 
+
 # --------------------------------------------------------------------------- #
 def test_stale_revision_is_rejected_for_save_and_test(tmp_path):
     store = make_store(tmp_path)
@@ -136,6 +139,7 @@ def test_draft_does_not_persist(tmp_path):
 
 
 # --------------------------------------------------------------------------- #
+
 
 # --------------------------------------------------------------------------- #
 @pytest.mark.parametrize("timeout", [4, 121, "30", True, float("nan")])
@@ -171,7 +175,10 @@ def test_unsafe_base_urls_are_rejected(url):
 
 def test_base_url_is_canonicalized_and_subpath_kept():
     assert normalize_base_url("https://API.example.test/v1/") == "https://api.example.test/v1"
-    assert normalize_base_url("https://gw.example.test/openai/v1") == "https://gw.example.test/openai/v1"
+    assert (
+        normalize_base_url("https://gw.example.test/openai/v1")
+        == "https://gw.example.test/openai/v1"
+    )
     assert normalize_base_url("http://127.0.0.1:8000/v1") == "http://127.0.0.1:8000/v1"
 
 
@@ -182,6 +189,7 @@ def test_resolved_target_is_checked(tmp_path):
 
 
 # --------------------------------------------------------------------------- #
+
 
 # --------------------------------------------------------------------------- #
 def test_env_overrides_are_locked(tmp_path):
@@ -195,7 +203,6 @@ def test_env_overrides_are_locked(tmp_path):
 
     with pytest.raises(InvalidConfigError):
         store.update(config_revision=1, settings={"model": "user-model"})
-
 
     store.update(config_revision=1, settings={"model": "env-model", "auth_mode": "bearer"})
 
@@ -217,13 +224,16 @@ def test_env_key_requires_env_base_url(tmp_path):
 
 # --------------------------------------------------------------------------- #
 
+
 # --------------------------------------------------------------------------- #
 def test_changing_base_url_drops_runtime_key(tmp_path):
     store = make_store(tmp_path)
     store.update(config_revision=1, settings={"base_url": BASE}, api_key="sk-bound")
     assert store.key_source() == "runtime"
 
-    snapshot = store.update(config_revision=2, settings={"base_url": "https://other.example.test/v1"})
+    snapshot = store.update(
+        config_revision=2, settings={"base_url": "https://other.example.test/v1"}
+    )
     assert snapshot["key_present"] is False
     assert snapshot["key_source"] == "none"
 
