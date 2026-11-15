@@ -1726,6 +1726,7 @@ __metadata:
     "@jupyterlab/application": ^4.0.0
     "@jupyterlab/coreutils": ^6.0.0
     "@jupyterlab/services": ^7.0.0
+    "@jupyterlab/ui-components": ^4.6.5
     "@lumino/widgets": ^2.0.0
     typescript: ~5.5.4
   languageName: unknown
