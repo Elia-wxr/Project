@@ -1,50 +1,6 @@
-@import './settings.css';
+/* Tarot panel styles: shared basics, the main sidebar, and the AI settings
+ * panel contributed by task B-01. */
 
-.tarot-sidebar {
-  padding: 12px;
-  overflow: auto;
-  background: var(--jp-layout-color1);
-  color: var(--jp-ui-font-color1);
-}
-
-.tarot-sidebar form,
-.tarot-sidebar .tarot-actions {
-  display: grid;
-  gap: 8px;
-}
-
-.tarot-sidebar textarea,
-.tarot-sidebar button {
-  font: inherit;
-}
-
-.tarot-sidebar p {
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-}
-
-.tarot-sidebar .tarot-tabs {
-  display: flex;
-  gap: 4px;
-  margin-bottom: 12px;
-}
-
-.tarot-sidebar .tarot-tab {
-  flex: 1 1 auto;
-  min-height: 28px;
-  border: 1px solid var(--jp-border-color2);
-  border-radius: var(--jp-border-radius);
-  background: var(--jp-layout-color2);
-  color: var(--jp-ui-font-color1);
-  cursor: pointer;
-}
-
-.tarot-sidebar .tarot-tab[aria-selected='true'] {
-  background: var(--jp-brand-color1);
-  border-color: var(--jp-brand-color1);
-  color: var(--jp-ui-inverse-font-color1);
-}
-
-.tarot-sidebar [data-view='reading'][hidden] {
-  display: none;
-}
+@import url('./base.css');
+@import url('./sidebar.css');
+@import url('./settings.css');

@@ -1,0 +1,68 @@
+/* Shared, theme-aware basics for both Tarot panels.
+ *
+ * Only public JupyterLab theme variables are read; no literal colors and no
+ * global element selectors are used, so the panels follow the active theme
+ * (light or dark) without a second palette. */
+
+.jp-TarotSidebar,
+.jp-TarotSettingsPanel {
+  box-sizing: border-box;
+  min-width: 0;
+  color: var(--jp-ui-font-color1);
+  background: var(--jp-layout-color1);
+  font-family: var(--jp-ui-font-family);
+  font-size: var(--jp-ui-font-size1);
+  line-height: 1.4;
+}
+
+.jp-TarotSidebar *,
+.jp-TarotSidebar *::before,
+.jp-TarotSidebar *::after,
+.jp-TarotSettingsPanel *,
+.jp-TarotSettingsPanel *::before,
+.jp-TarotSettingsPanel *::after {
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+.jp-TarotSidebar-heading,
+.jp-TarotSettingsPanel-heading {
+  margin: 0;
+  color: var(--jp-ui-font-color1);
+  font-size: var(--jp-ui-font-size2);
+  font-weight: 600;
+}
+
+.jp-TarotSidebar-message,
+.jp-TarotSettingsPanel-message,
+.jp-TarotSidebar-hint,
+.jp-TarotSettingsPanel-hint {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.jp-TarotSidebar-hint,
+.jp-TarotSettingsPanel-hint {
+  color: var(--jp-ui-font-color2);
+  font-size: var(--jp-ui-font-size0);
+}
+
+.jp-TarotSidebar :focus-visible,
+.jp-TarotSettingsPanel :focus-visible {
+  outline: 2px solid var(--jp-brand-color1);
+  outline-offset: 2px;
+}
+
+.jp-TarotSidebar .jp-TarotSidebar-srOnly,
+.jp-TarotSettingsPanel .jp-TarotSettingsPanel-srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  border: 0;
+  white-space: nowrap;
+}
