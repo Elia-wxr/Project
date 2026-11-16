@@ -3,8 +3,8 @@ name: Build and publish PyPI packages
 # Every commit on main builds the sdist and wheel with a version bound to the
 # git commit hash (PEP 440 local version, e.g. 0.1.0+g1a2b3c4d).  Pushing a
 # version tag (e.g. v0.1.0) builds with the tag version and publishes the
-# whole package to PyPI through a trusted publisher, so no API token is
-# stored in the repository.
+# whole package to PyPI through a trusted publisher (no API token) and
+# attaches the built sdist and wheel to a GitHub Release for the tag.
 
 on:
   push:
@@ -78,3 +78,23 @@ jobs:
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
+
+  release:
+    # Attach the built packages to a GitHub Release for every version tag.
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download built packages
+        uses: actions/download-artifact@v4
+        with:
+          name: pypi-packages
+          path: dist
+
+      - name: Create GitHub Release and upload packages
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          generate_release_notes: true
