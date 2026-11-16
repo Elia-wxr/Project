@@ -221,3 +221,8 @@ __marimo__/
 # Generated JupyterLab prebuilt extension
 /src/tarot_jupyterlab/labextension/
 .DS_Store
+
+# Tarot user data: saved readings and AI settings are local records and
+# must never be committed to the repository.
+latest.json
+ai-config.json

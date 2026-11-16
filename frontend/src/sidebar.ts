@@ -113,8 +113,8 @@ export class TarotSidebar extends Widget {
     // The AI settings panel (task B-01) keeps its own draft and key state.
     this.settingsPanel = new TarotSettingsPanel(client, {
       onSaved: snapshot => {
-        if (snapshot.settings.mode === 'demo') {
-          this.setStatus('Saved. Demo mode will use simulated readings.', 'success');
+        if (!snapshot.settings.enabled) {
+          this.setStatus('Saved. AI is disabled; readings are unavailable until you enable AI.', 'success');
         } else {
           this.setStatus('Saved.', 'success');
         }
@@ -336,9 +336,6 @@ function renderRecord(
   const badges = document.createElement('div');
   badges.className = 'jp-TarotSidebar-badgeRow';
   badges.append(badge(orientationLabel));
-  if (reading?.provider === 'FakeAIProvider') {
-    badges.append(badge('Demo reading (simulated)'));
-  }
   nodes.push(badges);
 
   const question = document.createElement('p');

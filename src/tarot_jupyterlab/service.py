@@ -10,7 +10,7 @@ from typing import Any
 
 from tarot_jupyterlab.ai import AIProvider, generate_reading
 from tarot_jupyterlab.ai.config import AIConfigStore
-from tarot_jupyterlab.ai.provider import FakeAIProvider, OpenAICompatibleProvider
+from tarot_jupyterlab.ai.provider import OpenAICompatibleProvider
 from tarot_jupyterlab.cards import create_single_session
 from tarot_jupyterlab.errors import (
     AITimeoutError,
@@ -56,8 +56,8 @@ class TarotService:
         provider, timeout = self._provider_for_reading()
         if provider is None:
             raise AIUnavailableError(
-                "No AI is configured. Open AI settings and choose a model or Demo mode. "
-                "You can still save the card.",
+                "AI is disabled or not configured. Open AI settings, enable AI and choose a "
+                "model. You can still save the card.",
             )
 
         snapshot = deepcopy(record.session)
@@ -114,8 +114,8 @@ class TarotService:
         if self._ai_store is not None:
             kwargs = self._ai_store.provider_kwargs()
             timeout = float(kwargs["timeout_seconds"]) + 5
-            if kwargs["mode"] == "demo":
-                return FakeAIProvider(), timeout
+            if not kwargs["enabled"]:
+                return None, timeout
             if not kwargs["model"]:
                 return None, timeout
             if kwargs["auth_mode"] == "bearer" and not kwargs["api_key"]:

@@ -38,7 +38,7 @@ def test_fresh_store_is_not_configured_and_leaks_nothing(tmp_path):
     assert snapshot["key_present"] is False
     assert snapshot["key_source"] == "none"
     assert snapshot["locked_fields"] == []
-    assert snapshot["settings"]["mode"] == "real"
+    assert snapshot["settings"]["enabled"] is True
     assert snapshot["settings"]["timeout_seconds"] == 30
     assert "api_key" not in json.dumps(snapshot)
 
@@ -57,10 +57,35 @@ def test_status_becomes_configured_with_model_and_key(tmp_path):
     assert snapshot["config_revision"] == 2
 
 
-def test_demo_mode_status_and_no_key_needed(tmp_path):
+def test_disabled_ai_status_and_no_key_needed(tmp_path):
     store = make_store(tmp_path)
-    snapshot = store.update(config_revision=1, settings={"mode": "demo"})
-    assert snapshot["status"] == "demo"
+    snapshot = store.update(config_revision=1, settings={"enabled": False})
+    assert snapshot["status"] == "disabled"
+    assert snapshot["settings"]["enabled"] is False
+
+
+def test_legacy_mode_file_migrates_to_enabled(tmp_path):
+    path = tmp_path / "ai-config.json"
+    path.write_text(
+        json.dumps(
+            {
+                "config_version": 1,
+                "config_revision": 3,
+                "settings": {
+                    "mode": "demo",
+                    "base_url": BASE,
+                    "model": "",
+                    "auth_mode": "bearer",
+                    "timeout_seconds": 30,
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    store = AIConfigStore(path, environ={})
+    snapshot = store.snapshot()
+    assert snapshot["settings"]["enabled"] is False
+    assert snapshot["status"] == "disabled"
 
 
 # --------------------------------------------------------------------------- #

@@ -9,20 +9,19 @@ An English sidebar for JupyterLab 4. Draw one card, request a Socrates reading, 
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install "jupyterlab==4.6.5" ".\tarot_jupyterlab-0.1.0-py3-none-any.whl"
-$env:TAROT_DEMO_MODE = "1"
 .\.venv\Scripts\python.exe -m jupyterlab
 ```
 
-在浏览器的 JupyterLab 左侧打开 **Tarot**。输入一个示例问题，点击 **Draw a card → Generate reading → Save as latest**，确认覆盖提示。重启 JupyterLab 后用 **View latest** 查看保存结果。模拟解读会显示 **Demo reading (simulated)**。
+在浏览器的 JupyterLab 左侧打开 **Tarot**。输入一个示例问题，点击 **Draw a card** 即可抽牌并保存。生成解读前，先打开侧栏顶部的 **AI settings**，勾选 **Enable AI readings** 并填写 Base URL、模型和密钥。重启 JupyterLab 后用 **View latest** 查看保存结果。
 
 ## 接入课程 Socrates
 
-退出 JupyterLab，用课程发给你们的地址、模型名和密钥设置以下变量，再重新启动。同一环境里设置 `TAROT_DEMO_MODE=0` 可关闭模拟模式。
+也可以退出 JupyterLab，用以下环境变量配置 AI，再重新启动。取消勾选 **Enable AI readings**（或设置 `TAROT_AI_ENABLED=0`）可关闭 AI，此时仍可抽牌与保存。
 
 | 环境变量 | 用途 |
 | --- | --- |
-| `SOCRATES_API_BASE` | 课程的 API 基础地址，由适配器附加 `/chat/completions`。 |
-| `SOCRATES_MODEL` | 课程给出的模型名。 |
+| `TAROT_AI_BASE_URL` | OpenAI-compatible 服务的 API 基础地址，如 `https://api.openai.com/v1`，由适配器附加 `/chat/completions`。 |
+| `TAROT_AI_MODEL` | 模型名。 |
 | `SOCRATES_API_KEY` | 课程密钥，只在本地配置。 |
 
 真实解读会把问题、牌面和关键词发送给配置的课程服务。三项配置缺失时，后端会提示 AI 不可用，抽牌和保存仍可用。最近一条记录写在当前用户的 Jupyter 数据目录下的 `tarot-jupyterlab/latest.json`，可用 `jupyter --data-dir` 查看数据目录。每次确认保存会替换上一条。

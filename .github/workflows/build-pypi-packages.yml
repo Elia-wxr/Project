@@ -1,15 +1,15 @@
-name: Build PyPI packages
+name: Build and publish PyPI packages
 
-# Build the Python sdist and wheel on every commit and upload them as
-# workflow artifacts. The wheel includes the prebuilt JupyterLab frontend
-# (the hatch-jupyter-builder hook runs the frontend build automatically).
-#
-# To publish to PyPI instead, replace the upload step with
-# `pypa/gh-action-pypi-publish` and add a `PYPI_API_TOKEN` secret, and
-# consider restricting the trigger to version tags.
+# Every commit on main builds the sdist and wheel with a version bound to the
+# git commit hash (PEP 440 local version, e.g. 0.1.0+g1a2b3c4d).  Pushing a
+# version tag (e.g. v0.1.0) builds with the tag version and publishes the
+# whole package to PyPI through a trusted publisher, so no API token is
+# stored in the repository.
 
 on:
   push:
+    branches: [main]
+    tags: ['v*']
   workflow_dispatch:
 
 permissions:
@@ -25,17 +25,31 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: '3.12'
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: '22'
 
       - name: Install build dependencies
         run: |
           python -m pip install --upgrade pip
           python -m pip install build
+
+      - name: Compute package version
+        id: version
+        run: |
+          if [[ "$GITHUB_REF_TYPE" == "tag" ]]; then
+            VERSION="${GITHUB_REF_NAME#v}"
+          else
+            VERSION="0.1.0+g${GITHUB_SHA::8}"
+          fi
+          echo "Building version: $VERSION"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Write version into _version.py
+        run: python tools/set_version.py "${{ steps.version.outputs.version }}"
 
       - name: Build sdist and wheel
         run: python -m build
@@ -46,3 +60,21 @@ jobs:
           name: pypi-packages
           path: dist/*
           if-no-files-found: error
+
+  publish:
+    # Only tag pushes publish; trusted publishing needs no API token.
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Download built packages
+        uses: actions/download-artifact@v4
+        with:
+          name: pypi-packages
+          path: dist
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1

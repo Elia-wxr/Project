@@ -115,17 +115,17 @@ test('changing the server requires a new key or no authentication', () => {
   assert.equal(body?.settings.base_url, 'https://example.test/v1');
 });
 
-test('demo mode can be saved without a server and builds no test request', () => {
+test('disabled AI can be saved without a server and builds no test request', () => {
   const saved = snapshot();
   const draft = draftFromSnapshot(saved);
-  draft.mode = 'demo';
+  draft.enabled = false;
   draft.baseUrl = '';
   draft.model = '';
   assert.equal(validateDraft(draft, saved).base_url, undefined);
   assert.equal(validateDraft(draft, saved).model, undefined);
   assert.equal(buildTestBody(draft, saved), null);
   const save = buildSaveBody(draft, saved);
-  assert.equal(save?.settings.mode, 'demo');
+  assert.equal(save?.settings.enabled, false);
   assert.equal(save?.settings.base_url, '');
 });
 

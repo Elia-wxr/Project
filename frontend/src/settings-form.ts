@@ -8,7 +8,7 @@ import type {
 import { normalizeBaseUrl, parseTimeout, validateBaseUrl, type BaseUrlResult } from './validate';
 
 export interface SettingsDraft {
-  mode: AiSettings['mode'];
+  enabled: boolean;
   baseUrl: string;
   model: string;
   authMode: AiSettings['auth_mode'];
@@ -43,7 +43,7 @@ const FALLBACK: Record<string, string> = {
 
 export function draftFromSnapshot(snapshot: AiSettingsSnapshot): SettingsDraft {
   return {
-    mode: snapshot.settings.mode,
+    enabled: snapshot.settings.enabled,
     baseUrl: snapshot.settings.base_url,
     model: snapshot.settings.model,
     authMode: snapshot.settings.auth_mode,
@@ -61,7 +61,7 @@ export function isFieldLocked(snapshot: AiSettingsSnapshot, field: AiSettingFiel
 /** Identity of the draft that a passing test applies to. Key text is not stored. */
 export function draftStamp(draft: SettingsDraft): string {
   return JSON.stringify({
-    mode: draft.mode,
+    enabled: draft.enabled,
     baseUrl: draft.baseUrl,
     model: draft.model,
     authMode: draft.authMode,
@@ -73,7 +73,7 @@ export function draftStamp(draft: SettingsDraft): string {
 
 export function isDirty(draft: SettingsDraft, snapshot: AiSettingsSnapshot): boolean {
   const saved = snapshot.settings;
-  if (!isFieldLocked(snapshot, 'mode') && draft.mode !== saved.mode) {
+  if (!isFieldLocked(snapshot, 'enabled') && draft.enabled !== saved.enabled) {
     return true;
   }
   if (!isFieldLocked(snapshot, 'base_url') && draft.baseUrl.trim() !== saved.base_url) {
@@ -102,7 +102,7 @@ function resolveBaseUrl(draft: SettingsDraft, snapshot: AiSettingsSnapshot): Bas
   if (isFieldLocked(snapshot, 'base_url')) {
     return { ok: true, normalized: snapshot.settings.base_url };
   }
-  if (draft.mode === 'demo' && draft.baseUrl.trim() === '') {
+  if (!draft.enabled && draft.baseUrl.trim() === '') {
     return { ok: true, normalized: '' };
   }
   return validateBaseUrl(draft.baseUrl);
@@ -116,7 +116,7 @@ export function validateDraft(draft: SettingsDraft, snapshot: AiSettingsSnapshot
       errors.base_url = base.message;
     }
   }
-  if (!isFieldLocked(snapshot, 'model') && draft.mode === 'real' && draft.model.trim() === '') {
+  if (!isFieldLocked(snapshot, 'model') && draft.enabled && draft.model.trim() === '') {
     errors.model = 'Enter a model ID. You can type it; this page does not require a model list.';
   }
   if (!isFieldLocked(snapshot, 'timeout_seconds') && parseTimeout(draft.timeoutText) === null) {
@@ -133,7 +133,7 @@ export function validateDraft(draft: SettingsDraft, snapshot: AiSettingsSnapshot
   }
   if (
     !errors.api_key &&
-    draft.mode !== 'demo' &&
+    draft.enabled &&
     urlChangedWithStoredKey(draft, snapshot) &&
     draft.authMode !== 'none' &&
     draft.apiKeyInput.trim() === ''
@@ -155,7 +155,7 @@ export function settingsFromDraft(draft: SettingsDraft, snapshot: AiSettingsSnap
     return null;
   }
   return {
-    mode: isFieldLocked(snapshot, 'mode') ? snapshot.settings.mode : draft.mode,
+    enabled: isFieldLocked(snapshot, 'enabled') ? snapshot.settings.enabled : draft.enabled,
     base_url: base.normalized,
     model: (isFieldLocked(snapshot, 'model') ? snapshot.settings.model : draft.model).trim(),
     auth_mode: isFieldLocked(snapshot, 'auth_mode') ? snapshot.settings.auth_mode : draft.authMode,
@@ -184,7 +184,7 @@ export function buildSaveBody(draft: SettingsDraft, snapshot: AiSettingsSnapshot
 
 export function buildTestBody(draft: SettingsDraft, snapshot: AiSettingsSnapshot): AiTestRequest | null {
   const settings = settingsFromDraft(draft, snapshot);
-  if (settings === null || settings.mode === 'demo') {
+  if (settings === null || !settings.enabled) {
     return null;
   }
   const body: AiTestRequest = {
@@ -199,8 +199,8 @@ export function buildTestBody(draft: SettingsDraft, snapshot: AiSettingsSnapshot
 }
 
 export function statusLabel(status: AiSettingsSnapshot['status']): string {
-  if (status === 'demo') {
-    return 'Demo';
+  if (status === 'disabled') {
+    return 'Disabled';
   }
   if (status === 'configured') {
     return 'Configured (not tested)';
@@ -228,8 +228,8 @@ export function keyLabel(snapshot: AiSettingsSnapshot, draft: SettingsDraft): st
 }
 
 export function saveNotice(snapshot: AiSettingsSnapshot): string {
-  if (snapshot.status === 'demo') {
-    return 'Saved. Demo mode is simulated and was not connected to a server.';
+  if (snapshot.status === 'disabled') {
+    return 'Saved. AI is disabled; generate a reading only after you enable AI.';
   }
   if (snapshot.status === 'not_configured') {
     return 'Saved. This is not a successful connection. Add the missing key before a real reading.';

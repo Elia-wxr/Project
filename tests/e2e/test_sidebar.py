@@ -47,12 +47,8 @@ def test_keyboard_only_draw(page: Page) -> None:
     page.focus("#jp-tarot-question")
     page.keyboard.type("Keyboard question")
     page.keyboard.press("Tab")
-    assert page.evaluate(
-        "() => document.activeElement?.getAttribute('data-action')"
-    ) == "draw"
-    assert page.evaluate(
-        "() => document.activeElement?.matches(':focus-visible')"
-    )
+    assert page.evaluate("() => document.activeElement?.getAttribute('data-action')") == "draw"
+    assert page.evaluate("() => document.activeElement?.matches(':focus-visible')")
     page.keyboard.press("Enter")
 
     expect(page.locator(f"{CURRENT} .jp-TarotSidebar-cardName")).to_be_visible()
@@ -81,9 +77,10 @@ def test_themes_and_narrow_widths_do_not_overflow(page: Page) -> None:
 
     for theme, is_light in (("JupyterLab Light", "true"), ("JupyterLab Dark", "false")):
         set_theme(page, theme)
-        assert page.eval_on_selector(
-            "body", "body => body.getAttribute('data-jp-theme-light')"
-        ) == is_light
+        assert (
+            page.eval_on_selector("body", "body => body.getAttribute('data-jp-theme-light')")
+            == is_light
+        )
         # 240px is the effective content width of 480px at 200% zoom.
         for width in (480, 320, 240):
             set_sidebar_width(page, width)
@@ -106,19 +103,19 @@ def test_save_then_view_latest(page: Page) -> None:
     expect(page.locator(f"{HISTORY} .jp-TarotSidebar-state")).to_have_text("Saved")
 
 
-@pytest.mark.skipif(
-    os.environ.get("TAROT_E2E_DEMO") != "1",
-    reason="needs a server started with TAROT_DEMO_MODE=1",
-)
-def test_demo_reading_is_marked_and_keeps_the_card(page: Page) -> None:
+def test_disabled_ai_keeps_the_card(page: Page) -> None:
+    """With AI disabled, a reading fails cleanly and keeps the card."""
+    page.click('[data-tab="settings"]')
+    page.uncheck('input[name="enabled"]')
+    page.click('[data-settings-action="save"]')
+    page.click('[data-tab="reading"]')
     draw_card(page)
     page.click('[data-action="read"]')
-    page.wait_for_selector(".jp-TarotSidebar-reading", timeout=60_000)
 
-    expect(page.locator(f"{CURRENT} .jp-TarotSidebar-badge", has_text="Demo reading")).to_be_visible()
-    expect(page.locator(".jp-TarotSidebar-readingLabel").first).to_have_text("Summary")
-    expect(page.locator('[data-action="read"]')).to_be_disabled()
+    status = page.locator(STATUS)
+    expect(status).to_contain_text("AI is disabled or not configured", timeout=30_000)
     expect(page.locator(f"{CURRENT} .jp-TarotSidebar-cardName")).to_be_visible()
+    expect(page.locator('[data-action="read"]')).to_be_enabled()
 
 
 @pytest.mark.skipif(
@@ -130,7 +127,7 @@ def test_missing_ai_keeps_the_card_and_allows_retry(page: Page) -> None:
     page.click('[data-action="read"]')
 
     status = page.locator(STATUS)
-    expect(status).to_contain_text("No AI server is configured", timeout=30_000)
+    expect(status).to_contain_text("AI is disabled or not configured", timeout=30_000)
     expect(status).to_have_attribute("data-tone", "error")
     expect(page.locator(f"{CURRENT} .jp-TarotSidebar-cardName")).to_be_visible()
     expect(page.locator('[data-action="read"]')).to_be_enabled()

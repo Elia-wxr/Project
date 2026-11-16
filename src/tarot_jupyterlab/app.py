@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import asyncio
 import json
-import os
 import time
 from collections.abc import Iterator
 from contextlib import contextmanager
@@ -19,7 +18,7 @@ from jupyter_server.utils import url_path_join
 from tornado import web
 from tornado.web import authenticated
 
-from tarot_jupyterlab.ai import AIProvider, FakeAIProvider, OpenAICompatibleProvider
+from tarot_jupyterlab.ai import OpenAICompatibleProvider
 from tarot_jupyterlab.ai.config import (
     AIConfigStore,
     InvalidConfigError,
@@ -143,21 +142,10 @@ def _session_id(value: object) -> str:
         raise InvalidSessionError("Use the session ID returned when drawing a card.") from exc
 
 
-def _configured_provider() -> AIProvider | None:
-    if os.environ.get("TAROT_DEMO_MODE") == "1":
-        return FakeAIProvider()
-    base_url = os.environ.get("TAROT_AI_BASE_URL", "").strip()
-    api_key = os.environ.get("TAROT_AI_API_KEY", "").strip()
-    model = os.environ.get("TAROT_AI_MODEL", "").strip()
-    if base_url and api_key and model:
-        return OpenAICompatibleProvider(base_url=base_url, api_key=api_key, model=model)
-    return None
-
-
 def _load_jupyter_server_extension(serverapp: ServerApp) -> None:
     history_path = Path(jupyter_data_dir()) / "tarot-jupyterlab" / "latest.json"
     store = AIConfigStore(default_config_path(), resolver=system_resolver)
-    service = TarotService(load_card_set(), history_path, _configured_provider(), ai_store=store)
+    service = TarotService(load_card_set(), history_path, ai_store=store)
     serverapp.web_app.settings["tarot_ai_store"] = store
     serverapp.web_app.settings["tarot_service"] = service
     base_url = serverapp.web_app.settings["base_url"]
@@ -248,10 +236,8 @@ class AITestHandler(AIConfigHandler):
             settings=body.get("settings"),
             api_key=body.get("api_key"),
         )
-        if draft.mode == "demo":
-            raise InvalidConfigError(
-                "mode", "Demo mode does not contact a server. Switch to Real API to test."
-            )
+        if not draft.enabled:
+            raise InvalidConfigError("enabled", "AI is disabled. Enable AI to test the connection.")
         if not draft.model:
             raise InvalidConfigError("model", "A model ID is required to test the connection.")
         if draft.auth_mode == "bearer" and not key:

@@ -22,14 +22,12 @@ const template = `
   <section class="jp-TarotSettingsPanel-body" aria-label="AI settings">
     <h2>AI connection</h2>
     <p data-settings-region="status">Status: Loading…</p>
-    <p class="jp-TarotSettingsPanel-simulated" data-settings-region="simulated" hidden>Demo (simulated). This mode does not contact an AI server.</p>
+    <p data-settings-region="disabled-note" hidden>AI is disabled. You can still draw and save cards; generating a reading is unavailable until you enable AI.</p>
     <p data-settings-region="banner" role="status" aria-live="polite"></p>
     <form>
       <fieldset data-settings-region="fields">
         <div class="jp-TarotSettingsPanel-choice">
-          <span id="tarot-settings-mode-label">Mode</span>
-          <label><input type="radio" name="tarot-settings-mode" value="real"> Real API</label>
-          <label><input type="radio" name="tarot-settings-mode" value="demo"> Demo (simulated)</label>
+          <label><input type="checkbox" name="enabled"> Enable AI readings</label>
         </div>
         <label>Base URL
           <input name="base_url" type="url" autocomplete="off" spellcheck="false" placeholder="https://api.openai.com/v1">
@@ -93,11 +91,11 @@ export class TarotSettingsPanel extends Widget {
   private readonly form: HTMLFormElement;
   private readonly fields: HTMLFieldSetElement;
   private readonly status: HTMLElement;
-  private readonly simulated: HTMLElement;
+  private readonly disabledNote: HTMLElement;
   private readonly banner: HTMLElement;
   private readonly keyStatus: HTMLElement;
   private readonly baseHint: HTMLElement;
-  private readonly modeInputs: NodeListOf<HTMLInputElement>;
+  private readonly enabledInput: HTMLInputElement;
   private readonly baseUrl: HTMLInputElement;
   private readonly model: HTMLInputElement;
   private readonly authMode: HTMLSelectElement;
@@ -126,11 +124,11 @@ export class TarotSettingsPanel extends Widget {
     this.form = this.node.querySelector('form')!;
     this.fields = this.node.querySelector('[data-settings-region="fields"]')!;
     this.status = this.node.querySelector('[data-settings-region="status"]')!;
-    this.simulated = this.node.querySelector('[data-settings-region="simulated"]')!;
+    this.disabledNote = this.node.querySelector('[data-settings-region="disabled-note"]')!;
     this.banner = this.node.querySelector('[data-settings-region="banner"]')!;
     this.keyStatus = this.node.querySelector('[data-settings-region="key"]')!;
     this.baseHint = this.node.querySelector('[data-settings-region="base-hint"]')!;
-    this.modeInputs = this.node.querySelectorAll('input[name="tarot-settings-mode"]');
+    this.enabledInput = this.node.querySelector('input[name="enabled"]')!;
     this.baseUrl = this.node.querySelector('input[name="base_url"]')!;
     this.model = this.node.querySelector('input[name="model"]')!;
     this.authMode = this.node.querySelector('select[name="auth_mode"]')!;
@@ -266,7 +264,7 @@ export class TarotSettingsPanel extends Widget {
   }
 
   private async testConnection(): Promise<void> {
-    if (!this.prepareSubmit() || this.draft!.mode === 'demo') {
+    if (!this.prepareSubmit() || !this.draft!.enabled) {
       return;
     }
     const body = buildTestBody(this.draft!, this.snapshot!);
@@ -332,9 +330,8 @@ export class TarotSettingsPanel extends Widget {
     if (this.draft === null || this.snapshot === null) {
       return;
     }
-    const selected = Array.from(this.modeInputs).find(input => input.checked);
-    if (!isFieldLocked(this.snapshot, 'mode') && (selected?.value === 'real' || selected?.value === 'demo')) {
-      this.draft.mode = selected.value;
+    if (!isFieldLocked(this.snapshot, 'enabled')) {
+      this.draft.enabled = this.enabledInput.checked;
     }
     if (!isFieldLocked(this.snapshot, 'base_url')) {
       this.draft.baseUrl = this.baseUrl.value;
@@ -367,21 +364,19 @@ export class TarotSettingsPanel extends Widget {
     this.reloadButton.disabled = this.busy;
     if (snapshot === null || draft === null) {
       this.status.textContent = 'Status: Unknown';
-      this.simulated.hidden = true;
+      this.disabledNote.hidden = true;
       this.testButton.disabled = true;
       this.saveButton.disabled = true;
       this.cancelButton.disabled = true;
       return;
     }
 
-    this.simulated.hidden = draft.mode !== 'demo';
-    this.status.textContent = draft.mode === 'demo'
-      ? 'Status: Demo (simulated)'
-      : `Status: ${statusLabel(snapshot.status)}`;
-    for (const input of this.modeInputs) {
-      input.checked = input.value === draft.mode;
-      input.disabled = locked || isFieldLocked(snapshot, 'mode');
-    }
+    this.disabledNote.hidden = draft.enabled;
+    this.status.textContent = draft.enabled
+      ? `Status: ${statusLabel(snapshot.status)}`
+      : 'Status: Disabled';
+    this.enabledInput.checked = draft.enabled;
+    this.enabledInput.disabled = locked || isFieldLocked(snapshot, 'enabled');
     this.assign(this.baseUrl, draft.baseUrl, locked || isFieldLocked(snapshot, 'base_url'));
     this.assign(this.model, draft.model, locked || isFieldLocked(snapshot, 'model'));
     this.authMode.value = draft.authMode;
@@ -417,11 +412,11 @@ export class TarotSettingsPanel extends Widget {
     if (!passed && this.testedStamp !== null) {
       this.testedStamp = null;
     }
-    this.testButton.disabled = locked || draft.mode === 'demo';
+    this.testButton.disabled = locked || !draft.enabled;
     this.saveButton.disabled = locked;
     this.cancelButton.disabled = locked || !isDirty(draft, snapshot);
-    if (draft.mode === 'demo' && !this.busy) {
-      this.testButton.title = 'Demo mode does not contact an AI server.';
+    if (!draft.enabled && !this.busy) {
+      this.testButton.title = 'AI is disabled. Enable it to test the connection.';
     } else {
       this.testButton.title = '';
     }

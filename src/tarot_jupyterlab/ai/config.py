@@ -40,10 +40,9 @@ DEFAULT_BASE_URL = "https://api.openai.com/v1"
 DEFAULT_TIMEOUT_SECONDS = 30.0
 MIN_TIMEOUT_SECONDS = 5.0
 MAX_TIMEOUT_SECONDS = 120.0
-MODES = ("real", "demo")
 AUTH_MODES = ("bearer", "none")
 
-ENV_MODE = "TAROT_DEMO_MODE"
+ENV_ENABLED = "TAROT_AI_ENABLED"
 ENV_API_KEY = "TAROT_AI_API_KEY"
 ENV_FIELDS = {
     "base_url": "TAROT_AI_BASE_URL",
@@ -77,7 +76,7 @@ Resolver = Callable[[str], list[str]]
 class AISettings:
     """Non-sensitive AI configuration. Never holds the API key."""
 
-    mode: str = "real"
+    enabled: bool = True
     base_url: str = DEFAULT_BASE_URL
     model: str = ""
     auth_mode: str = "bearer"
@@ -86,7 +85,7 @@ class AISettings:
     def to_dict(self) -> dict[str, Any]:
         timeout = self.timeout_seconds
         return {
-            "mode": self.mode,
+            "enabled": self.enabled,
             "base_url": self.base_url,
             "model": self.model,
             "auth_mode": self.auth_mode,
@@ -94,7 +93,7 @@ class AISettings:
         }
 
 
-SETTINGS_FIELDS = ("mode", "base_url", "model", "auth_mode", "timeout_seconds")
+SETTINGS_FIELDS = ("enabled", "base_url", "model", "auth_mode", "timeout_seconds")
 
 
 # --------------------------------------------------------------------------- #
@@ -188,9 +187,9 @@ def normalize_base_url(raw: Any, *, resolver: Resolver | None = None) -> str:
 # --------------------------------------------------------------------------- #
 # field validation
 # --------------------------------------------------------------------------- #
-def _validate_mode(value: Any) -> str:
-    if not isinstance(value, str) or value not in MODES:
-        raise InvalidConfigError("mode", "Mode must be 'real' or 'demo'.")
+def _validate_enabled(value: Any) -> bool:
+    if not isinstance(value, bool):
+        raise InvalidConfigError("enabled", "Enabled must be true or false.")
     return value
 
 
@@ -233,13 +232,19 @@ def settings_from_mapping(
         data = {}
     if not isinstance(data, Mapping):
         raise InvalidConfigError("settings", "Settings must be an object.")
+    # Migrate the pre-0.2 saved shape: mode "real"/"demo" becomes enabled.
+    if "enabled" not in data and "mode" in data:
+        legacy = data["mode"]
+        data = dict(data)
+        data.pop("mode")
+        data["enabled"] = legacy == "real"
     unknown = sorted(set(data) - set(SETTINGS_FIELDS))
     if unknown:
         raise InvalidConfigError("settings", f"Unknown settings field(s): {', '.join(unknown)}.")
 
     current = base or AISettings()
     values: dict[str, Any] = {
-        "mode": _validate_mode(data.get("mode", current.mode)),
+        "enabled": _validate_enabled(data.get("enabled", current.enabled)),
         "base_url": normalize_base_url(data.get("base_url", current.base_url), resolver=resolver),
         "model": _validate_model(data.get("model", current.model)),
         "auth_mode": _validate_auth_mode(data.get("auth_mode", current.auth_mode)),
@@ -256,8 +261,8 @@ def _same_value(field: str, value: Any, current: AISettings) -> bool:
             return normalize_base_url(value) == current.base_url
         if field == "model":
             return _validate_model(value) == current.model
-        if field == "mode":
-            return _validate_mode(value) == current.mode
+        if field == "enabled":
+            return _validate_enabled(value) == current.enabled
         if field == "auth_mode":
             return _validate_auth_mode(value) == current.auth_mode
     except InvalidConfigError:
@@ -341,9 +346,11 @@ class AIConfigStore:
         env = self._environ
         overrides: dict[str, Any] = {}
 
-        mode = env.get(ENV_MODE, "").strip()
-        if mode:
-            overrides["mode"] = "demo" if mode.lower() in ("1", "true", "yes", "on") else "real"
+        enabled = env.get(ENV_ENABLED, "").strip().lower()
+        if enabled in ("1", "true", "yes", "on"):
+            overrides["enabled"] = True
+        elif enabled in ("0", "false", "no", "off"):
+            overrides["enabled"] = False
 
         base = env.get(ENV_FIELDS["base_url"], "").strip()
         if base:
@@ -375,8 +382,8 @@ class AIConfigStore:
     def locked_fields(self) -> list[str]:
         """Fields the server environment controls; the UI must render them read-only."""
         locked: list[str] = []
-        if "mode" in self._env_overrides:
-            locked.append("mode")
+        if "enabled" in self._env_overrides:
+            locked.append("enabled")
         for field in ENV_FIELDS:
             if field in self._env_overrides:
                 locked.append(field)
@@ -414,8 +421,8 @@ class AIConfigStore:
 
     def status(self) -> str:
         settings = self.effective()
-        if settings.mode == "demo":
-            return "demo"
+        if not settings.enabled:
+            return "disabled"
         if not settings.model:
             return "not_configured"
         if settings.auth_mode == "bearer" and not self.api_key():
@@ -439,7 +446,7 @@ class AIConfigStore:
         """Internal snapshot used to build a provider. Contains the key."""
         settings = self.effective()
         return {
-            "mode": settings.mode,
+            "enabled": settings.enabled,
             "base_url": settings.base_url,
             "model": settings.model,
             "auth_mode": settings.auth_mode,
