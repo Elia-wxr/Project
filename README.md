@@ -46,25 +46,25 @@ wheel 生成在 `dist/`。用上面的本地演示步骤在另一个 Python 环�
 
 
 
----
-
 ## English Documentation
 
 ### Tarot JupyterLab
 An English sidebar extension for JupyterLab 4. Draw a tarot card, request a Socratic AI reading, and save the most recent result locally. Tarot readings are for entertainment and self-reflection purposes.
 
-### Local Demonstration (Using wheel)
-Execute the following commands in an isolated Python environment. Replace the filename with the actual downloaded `.whl` file:
-```bash
-python -m venv .venv
-.\.venv\Scripts\python.exe -m pip install "jupyterlab==4.6.5" ".\tarot_jupyterlab-0.1.0-py3-none-any.whl"
-.\.venv\Scripts\python.exe -m jupyterlab
-Usage Guide
-1. Open the Tarot tab on the left sidebar in your browser's JupyterLab.
-2. Enter a sample question and click Draw a card to draw and save.
-3. Before generating an interpretation, click AI settings at the top of the sidebar.
-4. Check Enable AI readings and fill in your Base URL, model, and API key.
-5. Restart JupyterLab and click View latest to see the saved results. 
-Integrating with the Socrates Course
- 
-You can also exit JupyterLab, configure the AI using the environment variables below, and restart. Uncheck "Enable AI readings" (or set TAROT_AI_ENABLED=0) to disable AI while keeping the drawing and saving features functional.
+### Usage Guide
+1. Open the **Tarot** tab on the left sidebar in your browser's JupyterLab.
+2. Enter a sample question and click **Draw a card** to draw and save.
+3. Before generating an interpretation, click **AI settings** at the top of the sidebar.
+4. Check **Enable AI readings** and fill in your Base URL, model, and API key.
+5. Restart JupyterLab and click **View latest** to see the saved results.
+
+### Integrating with the Socrates Course
+You can also exit JupyterLab, configure the AI using the environment variables below, and restart. Uncheck "Enable AI readings" (or set `TAROT_AI_ENABLED=0`) to disable AI while keeping the drawing and saving features functional.
+
+| Environment Variable | Purpose |
+| :--- | :--- |
+| `TAROT_AI_BASE_URL` | The API base URL for OpenAI-compatible services. |
+| `TAROT_AI_ENABLED` | Set to `0` to disable AI features. |
+
+
+
