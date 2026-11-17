@@ -16,35 +16,14 @@ Tarot JupyterLab is an English-language JupyterLab sidebar extension for drawing
 
 ## Installation
 
-The extension requires Python 3.10 or later and JupyterLab 4. Install from a local checkout in a virtual environment:
-
+### JupyterLab PyPi Manager
+Search `jupyterlab-tarot-card`
+### PyPi
 ```bash
-git clone https://github.com/Elia-wxr/jupyterlab-tarot-card.git
-cd jupyterlab-tarot-card
-python -m venv .venv
+pip install jupyter-tarot-card
 ```
-
-Activate the virtual environment, then install JupyterLab and the extension:
-
-```bash
-# macOS / Linux
-source .venv/bin/activate
-
-# Windows PowerShell
-# .venv\Scripts\Activate.ps1
-
-python -m pip install --upgrade pip
-python -m pip install "jupyterlab>=4,<5" .
-```
-
-Start JupyterLab:
-
-```bash
-jupyter lab
-```
-
-To install a built wheel instead, install JupyterLab 4 in the target environment and run `python -m pip install <path-to-wheel.whl>`.
-
+### Mannual Install
+Download packages on [Github Release](https://github.com/Elia-wxr/jupyterlab-tarot-card/releases) and use `pip install` command to install this package.
 ## Usage
 
 1. Start JupyterLab and select the **Tarot** icon in the left activity bar.
@@ -58,11 +37,11 @@ The latest saved record is stored by the Jupyter Server under its data directory
 
 ## Screenshots
 
-Screenshots are maintained under `docs/screenshot/`.
-
-<!-- Add current screenshots here, for example: ![Tarot sidebar](docs/screenshot/tarot-sidebar.png) -->
-
-> **Screenshot update required:** The AI settings UI has been updated. Reinstall the project to load the latest extension, then recapture and add new screenshots of the current AI settings panel under `docs/screenshot/`.
+### Main Page:
+![JupyterLab UI](docs/screenshots/a-jupyterlab-dark-480.png)
+![UI on Light Mode](docs/screenshots/a-sidebar-light-320.png)
+### Setting Page:
+![Settings](docs/screenshots/settings-light.png)
 
 ## Configuration
 
