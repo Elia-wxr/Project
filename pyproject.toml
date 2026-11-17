@@ -14,7 +14,7 @@ requires = [
 build-backend = "hatchling.build"
 
 [project]
-name = "tarot-jupyterlab"
+name = "jupyterlab-tarot-card"
 description = "A JupyterLab sidebar for a one-card tarot draw, AI reading, and latest saved record."
 readme = "README.md"
 license = "MIT"
